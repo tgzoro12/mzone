@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Tool - MZone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: #3a3a5a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .search-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .search-card h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input input {
+            flex: 1;
+            background: #3a3a5a;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .search-input input:focus {
+            outline: 2px solid #667eea;
+        }
+
+        .search-input input::placeholder {
+            color: #888;
+        }
+
+        .search-input button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 25px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .score-card.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(#10b981 0% 0%, #3a3a5a 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            width: 120px;
+            height: 120px;
+            background: #1a1a2e;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .score-value {
+            position: relative;
+            z-index: 1;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .score-url {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .result-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .result-status.pass {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .result-status.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .result-status.fail {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .result-details {
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .result-details strong {
+            color: #fff;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .tips-section h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #3a3a5a;
+        }
+
+        .tip-item:last-child {
+            border-bottom: none;
+        }
+
+        .tip-icon {
+            font-size: 20px;
+        }
+
+        .tip-text {
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #3a3a5a;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="dashboard.html" class="back-btn">← Back</a>
+        <h1>🔍 SEO Tool</h1>
+    </div>
+
+    <div class="search-card">
+        <h2>Analyze Your Website</h2>
+        <div class="search-input">
+            <input type="url" id="urlInput" placeholder="Enter website URL (e.g., example.com)">
+            <button onclick="analyzeSEO()">Scan</button>
+        </div>
+    </div>
+
+    <div class="score-card" id="scoreCard">
+        <div class="score-circle" id="scoreCircle">
+            <span class="score-value" id="scoreValue">0</span>
+        </div>
+        <div class="score-label" id="scoreLabel">Calculating...</div>
+        <div class="score-url" id="scoreUrl"></div>
+    </div>
+
+    <div class="results-section" id="resultsSection">
+        <div class="result-card">
+            <div class="result-header">
+                <span class="result-title">📄 Title Tag</span>
+                <span class="result-status pass" id="titleStatus">Pass</span>
+            </div>
+            <div class="result-details" id="titleDetails">
+                <strong>Found:</strong> "Your Website Title"<br>
+                <strong>Length:</strong> 45 characters (Recommended: 50-60)
+            </div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-header">
+                <span class="result-title">📝 Meta Description</span>
+                <span class="result-status warning" id="metaStatus">Warning</span>
+            </div>
+            <div class="result-details" id="metaDetails">
+                <strong>Found:</strong> "Your meta description..."<br>
+                <strong>Length:</strong> 120 characters (Recommended: 150-160)
+            </div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-header">
+                <span class="result-title">🔗 URL Structure</span>
+                <span class="result-status pass" id="urlStatus">Pass</span>
+            </div>
+            <div class="result-details" id="urlDetails">
+                URL is clean and SEO-friendly.<br>
+                No special characters or excessive parameters detected.
+            </div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-header">
+                <span class="result-title">📱 Mobile Friendly</span>
+                <span class="result-status pass" id="mobileStatus">Pass</span>
+            </div>
+            <div class="result-details" id="mobileDetails">
+                Website appears to be mobile responsive.<br>
+                Viewport meta tag is properly configured.
+            </div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-header">
+                <span class="result-title">⚡ Page Speed</span>
+                <span class="result-status warning" id="speedStatus">Warning</span>
+            </div>
+            <div class="result-details" id="speedDetails">
+                <strong>Estimated Load Time:</strong> 2.8 seconds<br>
+                Consider optimizing images and enabling compression.
+            </div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-header">
+                <span class="result-title">🔒 SSL Certificate</span>
+                <span class="result-status pass" id="sslStatus">Pass</span>
+            </div>
+            <div class="result-details" id="sslDetails">
+                Website is secured with HTTPS.<br>
+                SSL certificate is valid and properly configured.
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <h3>💡 Improvement Tips</h3>
+            <div class="tip-item">
+                <span class="tip-icon">1️⃣</span>
+                <span class="tip-text">Add more content to your pages. Search engines prefer pages with at least 300+ words.</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">2️⃣</span>
+                <span class="tip-text">Include your target keyword in the first paragraph and headings.</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">3️⃣</span>
+                <span class="tip-text">Add alt text to all images for better accessibility and SEO.</span>
+            </div>
+            <div class="tip-item">
+                <span class="tip-icon">4️⃣</span>
+                <span class="tip-text">Build quality backlinks from reputable websites in your niche.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Analyzing website...</div>
+    </div>
+
+    <script>
+        function analyzeSEO() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) {
+                alert('Please enter a website URL');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loadingOverlay').classList.add('show');
+
+            // Simulate analysis (3 seconds)
+            setTimeout(() => {
+                // Hide loading
+                document.getElementById('loadingOverlay').classList.remove('show');
+
+                // Show results
+                document.getElementById('scoreCard').classList.add('show');
+                document.getElementById('resultsSection').classList.add('show');
+
+                // Animate score
+                animateScore(87);
+
+                // Update URL display
+                document.getElementById('scoreUrl').textContent = url;
+
+                // Scroll to results
+                document.getElementById('scoreCard').scrollIntoView({ behavior: 'smooth' });
+            }, 3000);
+        }
+
+        function animateScore(targetScore) {
+            const scoreValue = document.getElementById('scoreValue');
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreLabel = document.getElementById('scoreLabel');
+            
+            let currentScore = 0;
+            const interval = setInterval(() => {
+                currentScore += 2;
+                if (currentScore >= targetScore) {
+                    currentScore = targetScore;
+                    clearInterval(interval);
+                }
+                
+                scoreValue.textContent = currentScore;
+                
+                // Update circle gradient
+                const percentage = currentScore;
+                let color = '#10b981'; // green
+                if (currentScore < 50) color = '#ef4444'; // red
+                else if (currentScore < 75) color = '#f59e0b'; // yellow
+                
+                scoreCircle.style.background = `conic-gradient(${color} 0% ${percentage}%, #3a3a5a ${percentage}% 100%)`;
+                
+                // Update label
+                if (currentScore >= 80) {
+                    scoreLabel.textContent = 'Excellent!';
+                    scoreLabel.style.color = '#10b981';
+                } else if (currentScore >= 60) {
+                    scoreLabel.textContent = 'Good';
+                    scoreLabel.style.color = '#f59e0b';
+                } else {
+                    scoreLabel.textContent = 'Needs Work';
+                    scoreLabel.style.color = '#ef4444';
+                }
+            }, 30);
+        }
+    </script>
+</body>
+</html>
