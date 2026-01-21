@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | MZone</title>
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     
-    <!-- CRITICAL: Prevent Caching -->
+    <!-- Prevent Caching -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -21,13 +20,12 @@
             min-height: 100vh; 
         }
         
-        /* Loading Screen */
+        /* Loading */
         .loading-screen {
             display: flex;
             min-height: 100vh;
             align-items: center;
             justify-content: center;
-            background: #0f172a;
             flex-direction: column;
             gap: 20px;
         }
@@ -41,9 +39,9 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { color: #94a3b8; font-size: 0.9rem; }
+        .loading-text { color: #94a3b8; }
         
-        /* Access Denied Screen */
+        /* Access Denied */
         .access-denied {
             display: none;
             min-height: 100vh;
@@ -51,23 +49,31 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            text-align: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         .access-denied.show { display: flex; }
         
-        .access-denied .box {
+        .denied-box {
             background: white;
             border-radius: 20px;
             padding: 40px;
             max-width: 400px;
             width: 100%;
+            text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        .access-denied .icon { font-size: 60px; margin-bottom: 20px; }
-        .access-denied h1 { color: #ef4444; font-size: 1.8rem; margin-bottom: 15px; }
-        .access-denied p { color: #666; margin-bottom: 25px; line-height: 1.6; }
-        .access-denied .btn {
+        .denied-icon { font-size: 60px; margin-bottom: 20px; }
+        .denied-box h1 { color: #ef4444; font-size: 1.8rem; margin-bottom: 15px; }
+        .denied-box p { color: #666; margin-bottom: 25px; line-height: 1.6; }
+        .denied-reason {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .denied-btn {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             color: white;
             padding: 16px 40px;
@@ -79,16 +85,8 @@
             text-decoration: none;
             display: inline-block;
         }
-        .access-denied .reason {
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-        }
         
-        /* Dashboard Content */
+        /* Dashboard */
         .dashboard { display: none; }
         .dashboard.show { display: block; }
         
@@ -154,12 +152,8 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
-            transition: background 0.2s, color 0.2s;
         }
-        .logout-btn:hover {
-            background: #ef4444;
-            color: white;
-        }
+        .logout-btn:hover { background: #ef4444; color: white; }
         
         .main-content {
             max-width: 1200px;
@@ -174,7 +168,7 @@
             margin-bottom: 30px;
         }
         .welcome-card h1 { font-size: 1.6rem; margin-bottom: 8px; }
-        .welcome-card p { opacity: 0.9; font-size: 0.95rem; }
+        .welcome-card p { opacity: 0.9; }
         
         .stats-grid {
             display: grid;
@@ -195,9 +189,6 @@
         .section-title {
             font-size: 1.2rem;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
         
         .tools-grid {
@@ -214,7 +205,6 @@
             text-decoration: none;
             color: #fff;
             transition: transform 0.2s, background 0.2s;
-            cursor: pointer;
         }
         .tool-card:hover {
             transform: translateY(-4px);
@@ -229,35 +219,25 @@
             padding: 24px;
             margin-bottom: 20px;
         }
-        .content-card h3 {
-            font-size: 1rem;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .content-card h3 { font-size: 1rem; margin-bottom: 16px; }
         
-        .subscription-info {
+        .sub-info {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.3);
             border-radius: 12px;
             padding: 16px;
-            margin-top: 20px;
         }
-        .subscription-info p {
-            color: #10b981;
-            font-size: 0.85rem;
-        }
-        .subscription-info.admin {
+        .sub-info p { color: #10b981; font-size: 0.9rem; }
+        .sub-info.admin {
             background: rgba(239, 68, 68, 0.1);
             border-color: rgba(239, 68, 68, 0.3);
         }
-        .subscription-info.admin p { color: #ef4444; }
-        .subscription-info.expiring {
+        .sub-info.admin p { color: #ef4444; }
+        .sub-info.warning {
             background: rgba(245, 158, 11, 0.1);
             border-color: rgba(245, 158, 11, 0.3);
         }
-        .subscription-info.expiring p { color: #f59e0b; }
+        .sub-info.warning p { color: #f59e0b; }
         
         .renew-btn {
             background: linear-gradient(135deg, #f59e0b, #d97706);
@@ -272,25 +252,25 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
+    <!-- Loading -->
     <div class="loading-screen" id="loadingScreen">
         <div class="spinner"></div>
         <p class="loading-text">Verifying access...</p>
     </div>
     
-    <!-- Access Denied Screen -->
+    <!-- Access Denied -->
     <div class="access-denied" id="accessDenied">
-        <div class="box">
-            <div class="icon">🔒</div>
+        <div class="denied-box">
+            <div class="denied-icon">🔒</div>
             <h1>Access Denied</h1>
-            <div class="reason" id="denialReason">No valid subscription found.</div>
+            <div class="denied-reason" id="deniedReason">No active subscription</div>
             <p>Please login with an active subscription to access the dashboard.</p>
-            <a href="index.html" class="btn">Go to Login 🚀</a>
+            <a href="index.html" class="denied-btn">Go to Login 🚀</a>
         </div>
     </div>
     
-    <!-- Dashboard Content -->
-    <div class="dashboard" id="dashboardContent">
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
         <nav class="navbar">
             <div class="container">
                 <a href="dashboard.html" class="logo">
@@ -299,7 +279,7 @@
                 </a>
                 <div class="user-info">
                     <span class="user-badge" id="userBadge">⭐ Premium</span>
-                    <button class="logout-btn" onclick="MZoneDashboard.logout()">Logout</button>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
         </nav>
@@ -307,7 +287,7 @@
         <main class="main-content">
             <div class="welcome-card">
                 <h1>Welcome back, <span id="userName">User</span>! 🎉</h1>
-                <p id="welcomeMsg">You have full access to all premium features.</p>
+                <p>You have full access to all premium features.</p>
             </div>
             
             <div class="stats-grid">
@@ -328,48 +308,48 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⭐</div>
-                    <div class="stat-number" id="daysLeft">∞</div>
+                    <div class="stat-number" id="daysLeft">30</div>
                     <div class="stat-label">Days Left</div>
                 </div>
             </div>
             
             <h2 class="section-title">🛠️ Pro Tools</h2>
             <div class="tools-grid">
-                <div class="tool-card" onclick="MZoneDashboard.openTool('analytics.html')">
+                <a href="analytics.html" class="tool-card">
                     <span class="tool-icon">📊</span>
                     <span class="tool-name">Analytics</span>
-                </div>
-                <div class="tool-card" onclick="MZoneDashboard.openTool('content-ai.html')">
+                </a>
+                <a href="content-ai.html" class="tool-card">
                     <span class="tool-icon">✍️</span>
                     <span class="tool-name">Content AI</span>
-                </div>
-                <div class="tool-card" onclick="MZoneDashboard.openTool('seo-tool.html')">
+                </a>
+                <a href="seo-tool.html" class="tool-card">
                     <span class="tool-icon">🔍</span>
                     <span class="tool-name">SEO Tool</span>
-                </div>
-                <div class="tool-card" onclick="MZoneDashboard.openTool('budget.html')">
+                </a>
+                <a href="budget.html" class="tool-card">
                     <span class="tool-icon">💰</span>
                     <span class="tool-name">Budget</span>
-                </div>
+                </a>
             </div>
             
-            <h2 class="section-title">💡 Quick Actions</h2>
+            <h2 class="section-title">💡 Resources</h2>
             <div class="tools-grid">
-                <div class="tool-card" onclick="MZoneDashboard.openTool('resources.html')">
+                <a href="resources.html" class="tool-card">
                     <span class="tool-icon">📚</span>
                     <span class="tool-name">Resources</span>
-                </div>
-                <div class="tool-card" onclick="MZoneDashboard.openTool('tutorials.html')">
+                </a>
+                <a href="tutorials.html" class="tool-card">
                     <span class="tool-icon">🎓</span>
                     <span class="tool-name">Tutorials</span>
-                </div>
+                </a>
             </div>
             
             <div class="content-card">
                 <h3>📋 Subscription Status</h3>
-                <div class="subscription-info" id="subscriptionInfo">
-                    <p id="subscriptionText">✅ Your subscription is active</p>
-                    <button class="renew-btn" id="renewBtn" style="display: none;" onclick="MZoneDashboard.renewSubscription()">Renew Now</button>
+                <div class="sub-info" id="subInfo">
+                    <p id="subText">✅ Your subscription is active</p>
+                    <button class="renew-btn" id="renewBtn" style="display: none;" onclick="renewSubscription()">Renew Now</button>
                 </div>
             </div>
         </main>
@@ -379,259 +359,143 @@
     <script src="https://js.paystack.co/v1/inline.js"></script>
     
     <script>
-    // ============================================================
-    // MZONE DASHBOARD - SECURE ACCESS CONTROLLER
-    // ============================================================
-
-    const MZoneDashboard = (function() {
-        'use strict';
+        // ===== STORAGE KEY (must match index.html) =====
+        var STORAGE_KEY = 'mzone_data_v3';
+        var PAYSTACK_KEY = 'pk_live_18794be9809d543f92489b74092f937800df5aa8';
         
-        // ===== CONFIGURATION (must match index.html) =====
-        const CONFIG = {
-            PAYSTACK_KEY: 'pk_live_18794be9809d543f92489b74092f937800df5aa8',
-            SUBSCRIPTION_DAYS: 30,
-            SUBSCRIPTION_AMOUNT: 1600000,
-            SECRET_KEY: 'MZ_' + btoa(navigator.userAgent.slice(0, 20) + screen.width)
-        };
-        
-        // ===== CRYPTO UTILITIES (same as index.html) =====
-        function generateHMAC(data) {
-            const str = JSON.stringify(data) + CONFIG.SECRET_KEY;
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
+        // ===== GET DATA =====
+        function getData() {
+            try {
+                var data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : { users: {}, currentUser: null };
+            } catch (e) {
+                return { users: {}, currentUser: null };
             }
-            return Math.abs(hash).toString(16);
         }
         
-        // ===== SECURE STORAGE (same as index.html) =====
-        const SecureStorage = {
-            getItem(key) {
-                try {
-                    const raw = localStorage.getItem('mz_' + key);
-                    if (!raw) return null;
-                    
-                    const data = JSON.parse(raw);
-                    const expectedHMAC = generateHMAC({ value: data.value, key });
-                    
-                    if (data.hmac !== expectedHMAC) {
-                        console.warn('Data integrity check failed');
-                        localStorage.removeItem('mz_' + key);
-                        return null;
-                    }
-                    
-                    return data.value;
-                } catch (e) {
-                    return null;
-                }
-            },
-            
-            setItem(key, value) {
-                const data = {
-                    value: value,
-                    timestamp: Date.now(),
-                    hmac: generateHMAC({ value, key })
-                };
-                localStorage.setItem('mz_' + key, JSON.stringify(data));
-            },
-            
-            removeItem(key) {
-                localStorage.removeItem('mz_' + key);
-            }
-        };
-        
-        // ===== ACCESS VERIFICATION =====
-        function verifyAccess() {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    // Get session
-                    const session = SecureStorage.getItem('session');
-                    
-                    // No session = no access
-                    if (!session) {
-                        resolve({ valid: false, reason: 'No active session. Please login.' });
-                        return;
-                    }
-                    
-                    // Check session expiry
-                    if (Date.now() > session.expiresAt) {
-                        SecureStorage.removeItem('session');
-                        sessionStorage.removeItem('mz_active');
-                        resolve({ valid: false, reason: 'Session expired. Please login again.' });
-                        return;
-                    }
-                    
-                    // Check tab session
-                    if (sessionStorage.getItem('mz_active') !== 'true') {
-                        resolve({ valid: false, reason: 'Session not active in this tab. Please login.' });
-                        return;
-                    }
-                    
-                    // Admin access
-                    if (session.isAdmin) {
-                        resolve({ 
-                            valid: true, 
-                            isAdmin: true, 
-                            name: 'Admin',
-                            email: session.email
-                        });
-                        return;
-                    }
-                    
-                    // Get user data
-                    const users = SecureStorage.getItem('users') || {};
-                    const user = users[session.email];
-                    
-                    if (!user) {
-                        SecureStorage.removeItem('session');
-                        resolve({ valid: false, reason: 'User account not found.' });
-                        return;
-                    }
-                    
-                    // Check subscription
-                    if (!user.subscribed) {
-                        resolve({ valid: false, reason: 'No active subscription. Please subscribe.' });
-                        return;
-                    }
-                    
-                    if (!user.subscriptionExpiry || user.subscriptionExpiry < Date.now()) {
-                        resolve({ 
-                            valid: false, 
-                            reason: 'Subscription expired. Please renew.',
-                            canRenew: true,
-                            email: session.email
-                        });
-                        return;
-                    }
-                    
-                    // Calculate days remaining
-                    const daysLeft = Math.ceil((user.subscriptionExpiry - Date.now()) / (24 * 60 * 60 * 1000));
-                    
-                    resolve({
-                        valid: true,
-                        isAdmin: false,
-                        name: user.name,
-                        email: user.email,
-                        expiry: user.subscriptionExpiry,
-                        daysLeft: daysLeft
-                    });
-                    
-                }, 500); // Small delay for loading animation
-            });
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
         
-        // ===== RENDER FUNCTIONS =====
-        function showDashboard(data) {
+        // ===== CHECK ACCESS =====
+        function checkAccess() {
+            var data = getData();
+            
+            // No logged in user
+            if (!data.currentUser) {
+                return { allowed: false, reason: 'Not logged in. Please login first.' };
+            }
+            
+            // Admin access
+            if (data.currentUser === 'admin' || data.isAdmin) {
+                return { allowed: true, isAdmin: true, name: 'Admin' };
+            }
+            
+            // Regular user
+            var user = data.users[data.currentUser];
+            
+            if (!user) {
+                return { allowed: false, reason: 'User not found. Please login again.' };
+            }
+            
+            if (!user.subscribed) {
+                return { allowed: false, reason: 'No active subscription. Please subscribe.' };
+            }
+            
+            if (!user.expiry || user.expiry < Date.now()) {
+                return { allowed: false, reason: 'Subscription expired. Please renew.' };
+            }
+            
+            var daysLeft = Math.ceil((user.expiry - Date.now()) / (24 * 60 * 60 * 1000));
+            
+            return {
+                allowed: true,
+                isAdmin: false,
+                name: user.name,
+                email: user.email,
+                expiry: user.expiry,
+                daysLeft: daysLeft
+            };
+        }
+        
+        // ===== SHOW DASHBOARD =====
+        function showDashboard(access) {
             document.getElementById('loadingScreen').classList.add('hide');
-            document.getElementById('dashboardContent').classList.add('show');
+            document.getElementById('dashboard').classList.add('show');
             
-            // Set user name
-            const firstName = data.name ? data.name.split(' ')[0] : 'User';
+            var firstName = access.name ? access.name.split(' ')[0] : 'User';
             document.getElementById('userName').textContent = firstName;
             
-            if (data.isAdmin) {
-                // Admin view
+            if (access.isAdmin) {
                 document.getElementById('userBadge').textContent = '👑 Admin';
                 document.getElementById('userBadge').classList.add('admin-badge');
                 document.getElementById('daysLeft').textContent = '∞';
-                document.getElementById('subscriptionInfo').classList.add('admin');
-                document.getElementById('subscriptionText').textContent = '👑 Admin account - Unlimited access';
-                document.getElementById('welcomeMsg').textContent = 'You have admin access to all features.';
+                document.getElementById('subInfo').classList.add('admin');
+                document.getElementById('subText').textContent = '👑 Admin - Unlimited access';
             } else {
-                // Regular user
-                document.getElementById('daysLeft').textContent = data.daysLeft;
+                document.getElementById('daysLeft').textContent = access.daysLeft;
                 
-                const expiryDate = new Date(data.expiry).toLocaleDateString('en-NG', {
+                var expiryDate = new Date(access.expiry).toLocaleDateString('en-NG', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 });
                 
-                if (data.daysLeft <= 7) {
-                    // Expiring soon warning
-                    document.getElementById('subscriptionInfo').classList.add('expiring');
-                    document.getElementById('subscriptionText').innerHTML = 
-                        `⚠️ Your subscription expires on <strong>${expiryDate}</strong> (${data.daysLeft} days left)`;
+                if (access.daysLeft <= 7) {
+                    document.getElementById('subInfo').classList.add('warning');
+                    document.getElementById('subText').innerHTML = '⚠️ Expires on <strong>' + expiryDate + '</strong> (' + access.daysLeft + ' days left)';
                     document.getElementById('renewBtn').style.display = 'inline-block';
                 } else {
-                    document.getElementById('subscriptionText').innerHTML = 
-                        `✅ Your subscription is active until <strong>${expiryDate}</strong>`;
+                    document.getElementById('subText').innerHTML = '✅ Active until <strong>' + expiryDate + '</strong>';
                 }
             }
         }
         
+        // ===== SHOW ACCESS DENIED =====
         function showAccessDenied(reason) {
             document.getElementById('loadingScreen').classList.add('hide');
-            document.getElementById('denialReason').textContent = reason;
+            document.getElementById('deniedReason').textContent = reason;
             document.getElementById('accessDenied').classList.add('show');
-        }
-        
-        // ===== TOOL ACCESS =====
-        function openTool(toolPage) {
-            // Re-verify access before opening any tool
-            verifyAccess().then(result => {
-                if (result.valid) {
-                    window.location.href = toolPage;
-                } else {
-                    alert('⚠️ ' + result.reason);
-                    window.location.href = 'index.html';
-                }
-            });
         }
         
         // ===== LOGOUT =====
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                SecureStorage.removeItem('session');
-                sessionStorage.clear();
+                var data = getData();
+                data.currentUser = null;
+                data.isAdmin = false;
+                saveData(data);
                 window.location.href = 'index.html';
             }
         }
         
-        // ===== SUBSCRIPTION RENEWAL =====
+        // ===== RENEW SUBSCRIPTION =====
         function renewSubscription() {
-            const session = SecureStorage.getItem('session');
-            if (!session || !session.email) {
-                alert('Session error. Please login again.');
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            const users = SecureStorage.getItem('users') || {};
-            const user = users[session.email];
+            var data = getData();
+            var email = data.currentUser;
+            var user = data.users[email];
             
             if (!user) {
-                alert('User not found. Please login again.');
+                alert('Error. Please login again.');
                 window.location.href = 'index.html';
                 return;
             }
             
-            const handler = PaystackPop.setup({
-                key: CONFIG.PAYSTACK_KEY,
-                email: session.email,
-                amount: CONFIG.SUBSCRIPTION_AMOUNT,
+            var handler = PaystackPop.setup({
+                key: PAYSTACK_KEY,
+                email: email,
+                amount: 1600000,
                 currency: 'NGN',
-                ref: 'MZ_RENEW_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                metadata: {
-                    custom_fields: [
-                        { display_name: "Name", variable_name: "name", value: user.name },
-                        { display_name: "Type", variable_name: "type", value: "Renewal" }
-                    ]
-                },
+                ref: 'MZ_RENEW_' + Date.now(),
                 callback: function(response) {
-                    const newExpiry = Date.now() + (CONFIG.SUBSCRIPTION_DAYS * 24 * 60 * 60 * 1000);
+                    var newExpiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
                     
-                    user.subscribed = true;
-                    user.subscriptionExpiry = newExpiry;
-                    user.paymentReference = response.reference;
-                    user.lastPayment = Date.now();
+                    data.users[email].subscribed = true;
+                    data.users[email].expiry = newExpiry;
+                    data.users[email].paymentRef = response.reference;
+                    saveData(data);
                     
-                    users[session.email] = user;
-                    SecureStorage.setItem('users', users);
-                    
-                    alert('✅ Subscription renewed successfully!');
+                    alert('✅ Subscription renewed!');
                     window.location.reload();
                 },
                 onClose: function() {
@@ -642,45 +506,38 @@
             handler.openIframe();
         }
         
-        // ===== INITIALIZATION =====
-        function init() {
-            // Immediately start verification
-            verifyAccess().then(result => {
-                if (result.valid) {
-                    showDashboard(result);
+        // ===== INIT =====
+        window.onload = function() {
+            setTimeout(function() {
+                var access = checkAccess();
+                
+                if (access.allowed) {
+                    showDashboard(access);
                 } else {
-                    showAccessDenied(result.reason);
+                    showAccessDenied(access.reason);
                 }
-            });
-            
-            // Prevent back button showing cached content
-            window.addEventListener('pageshow', function(event) {
-                if (event.persisted) {
-                    window.location.reload();
-                }
-            });
-            
-            // Check access periodically (every 30 seconds)
-            setInterval(() => {
-                verifyAccess().then(result => {
-                    if (!result.valid) {
-                        alert('⚠️ ' + result.reason);
-                        window.location.href = 'index.html';
-                    }
-                });
-            }, 30000);
-        }
-        
-        // Run immediately
-        init();
-        
-        // ===== PUBLIC API =====
-        return {
-            logout,
-            openTool,
-            renewSubscription
+            }, 500);
         };
-    })();
+        
+        // Re-check on tab focus
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                var access = checkAccess();
+                if (!access.allowed) {
+                    showAccessDenied(access.reason);
+                }
+            }
+        });
+        
+        // Re-check on back button
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                var access = checkAccess();
+                if (!access.allowed) {
+                    window.location.href = 'index.html';
+                }
+            }
+        });
     </script>
 </body>
 </html>
