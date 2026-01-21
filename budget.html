@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget - MZone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: #3a3a5a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .balance-stats {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-value.income {
+            color: #86efac;
+        }
+
+        .stat-value.expense {
+            color: #fca5a5;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn.income {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .action-btn.expense {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .section-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .see-all {
+            font-size: 12px;
+            color: #667eea;
+            cursor: pointer;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #3a3a5a;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        .transaction-icon.food { background: #fef3c7; }
+        .transaction-icon.transport { background: #dbeafe; }
+        .transaction-icon.shopping { background: #fce7f3; }
+        .transaction-icon.income { background: #d1fae5; }
+        .transaction-icon.bills { background: #fee2e2; }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .transaction-amount {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .transaction-amount.positive {
+            color: #10b981;
+        }
+
+        .transaction-amount.negative {
+            color: #ef4444;
+        }
+
+        .budget-item {
+            margin-bottom: 20px;
+        }
+
+        .budget-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .budget-name {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .budget-amount {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .budget-bar {
+            height: 8px;
+            background: #3a3a5a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .budget-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .budget-fill.green { background: linear-gradient(90deg, #10b981, #059669); }
+        .budget-fill.yellow { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .budget-fill.red { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: #3a3a5a;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: 2px solid #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .submit-btn.income {
+            background: #10b981;
+        }
+
+        .submit-btn.expense {
+            background: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="dashboard.html" class="back-btn">← Back</a>
+        <h1>💰 Budget</h1>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+        <div class="balance-label">Total Balance</div>
+        <div class="balance-amount" id="totalBalance">₦245,000</div>
+        <div class="balance-stats">
+            <div class="stat">
+                <div class="stat-value income" id="totalIncome">₦380,000</div>
+                <div class="stat-label">Income</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value expense" id="totalExpense">₦135,000</div>
+                <div class="stat-label">Expenses</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="action-btn income" onclick="openModal('income')">
+            <span>+</span> Add Income
+        </button>
+        <button class="action-btn expense" onclick="openModal('expense')">
+            <span>−</span> Add Expense
+        </button>
+    </div>
+
+    <!-- Budget Overview -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="section-title">📊 Monthly Budget</span>
+        </div>
+
+        <div class="budget-item">
+            <div class="budget-header">
+                <span class="budget-name">🍔 Food & Dining</span>
+                <span class="budget-amount">₦25,000 / ₦40,000</span>
+            </div>
+            <div class="budget-bar">
+                <div class="budget-fill green" style="width: 62%;"></div>
+            </div>
+        </div>
+
+        <div class="budget-item">
+            <div class="budget-header">
+                <span class="budget-name">🚗 Transport</span>
+                <span class="budget-amount">₦18,000 / ₦20,000</span>
+            </div>
+            <div class="budget-bar">
+                <div class="budget-fill yellow" style="width: 90%;"></div>
+            </div>
+        </div>
+
+        <div class="budget-item">
+            <div class="budget-header">
+                <span class="budget-name">🛍️ Shopping</span>
+                <span class="budget-amount">₦32,000 / ₦30,000</span>
+            </div>
+            <div class="budget-bar">
+                <div class="budget-fill red" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <div class="budget-item">
+            <div class="budget-header">
+                <span class="budget-name">📱 Bills & Utilities</span>
+                <span class="budget-amount">₦15,000 / ₦25,000</span>
+            </div>
+            <div class="budget-bar">
+                <div class="budget-fill green" style="width: 60%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="section-title">🕐 Recent Transactions</span>
+            <span class="see-all">See All</span>
+        </div>
+
+        <div id="transactionList">
+            <div class="transaction-item">
+                <div class="transaction-icon income">💵</div>
+                <div class="transaction-info">
+                    <div class="transaction-name">Salary</div>
+                    <div class="transaction-date">Today, 9:00 AM</div>
+                </div>
+                <div class="transaction-amount positive">+₦250,000</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-icon food">🍔</div>
+                <div class="transaction-info">
+                    <div class="transaction-name">Chicken Republic</div>
+                    <div class="transaction-date">Today, 1:30 PM</div>
+                </div>
+                <div class="transaction-amount negative">-₦3,500</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-icon transport">🚗</div>
+                <div class="transaction-info">
+                    <div class="transaction-name">Uber Ride</div>
+                    <div class="transaction-date">Yesterday, 6:00 PM</div>
+                </div>
+                <div class="transaction-amount negative">-₦2,800</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-icon shopping">🛍️</div>
+                <div class="transaction-info">
+                    <div class="transaction-name">Shoprite</div>
+                    <div class="transaction-date">Yesterday, 3:15 PM</div>
+                </div>
+                <div class="transaction-amount negative">-₦15,000</div>
+            </div>
+
+            <div class="transaction-item">
+                <div class="transaction-icon bills">📱</div>
+                <div class="transaction-info">
+                    <div class="transaction-name">MTN Airtime</div>
+                    <div class="transaction-date">2 days ago</div>
+                </div>
+                <div class="transaction-amount negative">-₦5,000</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div class="modal" id="transactionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modalTitle">Add Income</span>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+
+            <form onsubmit="addTransaction(event)">
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="description" placeholder="e.g., Salary, Groceries" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount (₦)</label>
+                    <input type="number" id="amount" placeholder="e.g., 50000" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category">
+                        <option value="income">💵 Income</option>
+                        <option value="food">🍔 Food & Dining</option>
+                        <option value="transport">🚗 Transport</option>
+                        <option value="shopping">🛍️ Shopping</option>
+                        <option value="bills">📱 Bills & Utilities</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn income" id="submitBtn">Add Income</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let transactionType = 'income';
+
+        function openModal(type) {
+            transactionType = type;
+            document.getElementById('transactionModal').classList.add('show');
+            document.getElementById('modalTitle').textContent = type === 'income' ? 'Add Income' : 'Add Expense';
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = type === 'income' ? 'Add Income' : 'Add Expense';
+            submitBtn.className = 'submit-btn ' + type;
+            
+            // Set default category
+            document.getElementById('category').value = type === 'income' ? 'income' : 'food';
+        }
+
+        function closeModal() {
+            document.getElementById('transactionModal').classList.remove('show');
+        }
+
+        function addTransaction(e) {
+            e.preventDefault();
+            
+            const description = document.getElementById('description').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const category = document.getElementById('category').value;
+            
+            const icons = {
+                income: '💵',
+                food: '🍔',
+                transport: '🚗',
+                shopping: '🛍️',
+                bills: '📱'
+            };
+
+            const isIncome = category === 'income';
+            const amountClass = isIncome ? 'positive' : 'negative';
+            const amountPrefix = isIncome ? '+' : '-';
+
+            const newTransaction = `
+                <div class="transaction-item">
+                    <div class="transaction-icon ${category}">${icons[category]}</div>
+                    <div class="transaction-info">
+                        <div class="transaction-name">${description}</div>
+                        <div class="transaction-date">Just now</div>
+                    </div>
+                    <div class="transaction-amount ${amountClass}">${amountPrefix}₦${amount.toLocaleString()}</div>
+                </div>
+            `;
+
+            document.getElementById('transactionList').insertAdjacentHTML('afterbegin', newTransaction);
+
+            // Update totals
+            updateTotals(amount, isIncome);
+
+            // Close modal and reset form
+            closeModal();
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+
+            alert('✅ Transaction added successfully!');
+        }
+
+        function updateTotals(amount, isIncome) {
+            const balanceEl = document.getElementById('totalBalance');
+            const incomeEl = document.getElementById('totalIncome');
+            const expenseEl = document.getElementById('totalExpense');
+
+            let balance = parseInt(balanceEl.textContent.replace(/[₦,]/g, ''));
+            let income = parseInt(incomeEl.textContent.replace(/[₦,]/g, ''));
+            let expense = parseInt(expenseEl.textContent.replace(/[₦,]/g, ''));
+
+            if (isIncome) {
+                income += amount;
+                balance += amount;
+            } else {
+                expense += amount;
+                balance -= amount;
+            }
+
+            balanceEl.textContent = '₦' + balance.toLocaleString();
+            incomeEl.textContent = '₦' + income.toLocaleString();
+            expenseEl.textContent = '₦' + expense.toLocaleString();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('transactionModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
