@@ -7,7 +7,12 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     
-    <!-- Paystack Script - CRITICAL! -->
+    <!-- Prevent Caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- Paystack Script -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
     
     <style>
@@ -34,7 +39,6 @@
         }
         
         .logo { font-size: 3rem; margin-bottom: 10px; }
-        
         h1 { color: #1a1a2e; margin-bottom: 10px; font-size: 2rem; }
         
         .price {
@@ -43,7 +47,6 @@
             color: #6366f1;
             margin: 20px 0;
         }
-        
         .price span { font-size: 1rem; color: #666; }
         
         .features {
@@ -53,13 +56,11 @@
             background: #f8f9fa;
             border-radius: 10px;
         }
-        
         .features li {
             padding: 8px 0;
             list-style: none;
             color: #333;
         }
-        
         .features li::before { content: "✅ "; }
         
         .subscribe-btn {
@@ -75,6 +76,17 @@
             margin-top: 20px;
         }
         
+        .login-link {
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .login-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
         .modal {
             display: none;
             position: fixed;
@@ -88,7 +100,6 @@
             z-index: 1000;
             padding: 20px;
         }
-        
         .modal.active { display: flex; }
         
         .modal-content {
@@ -99,7 +110,6 @@
             width: 100%;
             position: relative;
         }
-        
         .modal-content h2 { margin-bottom: 20px; color: #1a1a2e; }
         
         .close-btn {
@@ -112,14 +122,12 @@
         }
         
         .form-group { margin-bottom: 15px; text-align: left; }
-        
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: 600;
             color: #333;
         }
-        
         .form-group input {
             width: 100%;
             padding: 15px;
@@ -127,7 +135,6 @@
             border-radius: 10px;
             font-size: 1rem;
         }
-        
         .form-group input:focus {
             outline: none;
             border-color: #6366f1;
@@ -151,10 +158,103 @@
             font-size: 0.85rem;
             color: #666;
         }
+        
+        /* Telegram Warning */
+        .telegram-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+            padding: 20px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .telegram-warning.show { display: flex; }
+        
+        .warning-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .warning-icon { font-size: 60px; margin-bottom: 20px; }
+        .warning-box h2 { color: #1a1a2e; margin-bottom: 15px; }
+        .warning-box p { color: #666; margin-bottom: 25px; line-height: 1.6; }
+        
+        .open-browser-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .copy-btn {
+            background: transparent;
+            border: 2px solid #6366f1;
+            color: #6366f1;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .steps {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        .steps h4 { color: #1a1a2e; font-size: 0.9rem; margin-bottom: 12px; }
+        .steps ol { padding-left: 20px; color: #666; font-size: 0.85rem; line-height: 1.8; }
+        .steps strong { color: #1a1a2e; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Telegram Warning -->
+    <div class="telegram-warning" id="telegramWarning">
+        <div class="warning-box">
+            <div class="warning-icon">🔒</div>
+            <h2>Open in Browser</h2>
+            <p>For secure payment, please open this page in Chrome or Safari.</p>
+            
+            <a href="https://tgzoro12.github.io/mzone/?v=1001" target="_blank" class="open-browser-btn">
+                Open in Browser 🌐
+            </a>
+            
+            <button class="copy-btn" onclick="copyLink()">📋 Copy Link</button>
+            
+            <div class="steps">
+                <h4>📱 Or follow these steps:</h4>
+                <ol>
+                    <li>Tap <strong>⋮</strong> (menu) at top right</li>
+                    <li>Select <strong>"Open in Chrome"</strong></li>
+                    <li>Complete your payment</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent">
         <div class="logo">🎬</div>
         <h1>MZone Premium</h1>
         <p style="color: #666;">Unlimited access to all content</p>
@@ -170,6 +270,8 @@
         </ul>
         
         <button class="subscribe-btn" onclick="openModal()">Subscribe Now 🚀</button>
+        
+        <p class="login-link">Already subscribed? <a href="dashboard.html">Access Dashboard</a></p>
     </div>
     
     <!-- Payment Modal -->
@@ -197,7 +299,56 @@
     </div>
     
     <script>
+        // ===== VERSION FOR CACHE BUSTING =====
+        var APP_VERSION = '1001';
+        
+        // ===== WEBVIEW DETECTION =====
+        function isInAppBrowser() {
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            if (/Telegram/i.test(ua)) return true;
+            if (/Instagram/i.test(ua)) return true;
+            if (/FBAN|FBAV|FB_IAB/i.test(ua)) return true;
+            if (/Twitter/i.test(ua)) return true;
+            if (/Snapchat/i.test(ua)) return true;
+            if (/BytedanceWebview|TikTok/i.test(ua)) return true;
+            if (/wv|WebView/i.test(ua)) return true;
+            if (/Android/.test(ua) && /Version\/[\d.]+/.test(ua) && !/Chrome/.test(ua)) return true;
+            return false;
+        }
+        
+        // ===== ON PAGE LOAD =====
+        window.onload = function() {
+            // Show Telegram warning if in WebView
+            if (isInAppBrowser()) {
+                document.getElementById('telegramWarning').classList.add('show');
+                document.getElementById('mainContent').style.display = 'none';
+            }
+        };
+        
+        // ===== COPY LINK =====
+        function copyLink() {
+            var url = 'https://tgzoro12.github.io/mzone/?v=' + APP_VERSION;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(function() {
+                    alert('✅ Link copied!\\n\\nPaste it in Chrome or Safari.');
+                });
+            } else {
+                var textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('✅ Link copied!\\n\\nPaste it in Chrome or Safari.');
+            }
+        }
+        
+        // ===== MODAL FUNCTIONS =====
         function openModal() {
+            if (isInAppBrowser()) {
+                alert('⚠️ Please open in Chrome or Safari browser first.');
+                return;
+            }
             document.getElementById('paymentModal').classList.add('active');
         }
         
@@ -209,8 +360,14 @@
             if (e.target === this) closeModal();
         });
         
+        // ===== PAYMENT =====
         document.getElementById('paymentForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            if (isInAppBrowser()) {
+                alert('⚠️ Please open in Chrome or Safari browser.');
+                return;
+            }
             
             var email = document.getElementById('email').value.trim();
             var name = document.getElementById('name').value.trim();
@@ -231,7 +388,14 @@
                 currency: 'NGN',
                 ref: 'MZ_' + Date.now(),
                 callback: function(response) {
+                    // Save subscription data
+                    var expiry = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 days
                     localStorage.setItem('mzone_subscribed', 'true');
+                    localStorage.setItem('mzone_email', email);
+                    localStorage.setItem('mzone_name', name);
+                    localStorage.setItem('mzone_ref', response.reference);
+                    localStorage.setItem('mzone_expiry', expiry.toString());
+                    
                     window.location.href = 'dashboard.html?status=success&ref=' + response.reference;
                 },
                 onClose: function() {
