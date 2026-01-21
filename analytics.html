@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - MZone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: #3a3a5a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card.highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .stat-card.highlight .stat-label {
+            color: #ddd;
+        }
+
+        .chart-section {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            min-height: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.05);
+            transform-origin: bottom;
+        }
+
+        .chart-bar span {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .chart-bar .value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #fff;
+        }
+
+        .progress-section {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-item {
+            margin-bottom: 20px;
+        }
+
+        .progress-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+        }
+
+        .progress-value {
+            font-size: 14px;
+            color: #667eea;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #3a3a5a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .progress-fill.purple {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .progress-fill.green {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .progress-fill.orange {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .progress-fill.blue {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+        }
+
+        .recent-section {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .recent-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #3a3a5a;
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-icon {
+            width: 40px;
+            height: 40px;
+            background: #3a3a5a;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 15px;
+        }
+
+        .recent-info {
+            flex: 1;
+        }
+
+        .recent-title {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .recent-time {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .recent-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .recent-value.negative {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="dashboard.html" class="back-btn">← Back</a>
+        <h1>📊 Analytics</h1>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card highlight">
+            <div class="stat-icon">👁️</div>
+            <div class="stat-value" id="totalViews">12,459</div>
+            <div class="stat-label">Total Views</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-value" id="totalUsers">3,847</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value" id="growthRate">+24%</div>
+            <div class="stat-label">Growth Rate</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-value" id="avgTime">4:32</div>
+            <div class="stat-label">Avg. Time</div>
+        </div>
+    </div>
+
+    <!-- Weekly Chart -->
+    <div class="chart-section">
+        <h2 class="chart-title">📈 Weekly Traffic</h2>
+        <div class="chart-container">
+            <div class="chart-bar" style="height: 60%;">
+                <span>Mon</span>
+                <span class="value">1.2k</span>
+            </div>
+            <div class="chart-bar" style="height: 80%;">
+                <span>Tue</span>
+                <span class="value">1.8k</span>
+            </div>
+            <div class="chart-bar" style="height: 45%;">
+                <span>Wed</span>
+                <span class="value">900</span>
+            </div>
+            <div class="chart-bar" style="height: 90%;">
+                <span>Thu</span>
+                <span class="value">2.1k</span>
+            </div>
+            <div class="chart-bar" style="height: 70%;">
+                <span>Fri</span>
+                <span class="value">1.5k</span>
+            </div>
+            <div class="chart-bar" style="height: 55%;">
+                <span>Sat</span>
+                <span class="value">1.1k</span>
+            </div>
+            <div class="chart-bar" style="height: 100%;">
+                <span>Sun</span>
+                <span class="value">2.4k</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+        <h2 class="chart-title">🎯 Goals Progress</h2>
+        
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">Monthly Target</span>
+                <span class="progress-value">75%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill purple" style="width: 75%;"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">User Engagement</span>
+                <span class="progress-value">88%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill green" style="width: 88%;"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">Content Created</span>
+                <span class="progress-value">45%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill orange" style="width: 45%;"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">SEO Score</span>
+                <span class="progress-value">92%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill blue" style="width: 92%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-section">
+        <h2 class="chart-title">🕐 Recent Activity</h2>
+        
+        <div class="recent-item">
+            <div class="recent-icon">👤</div>
+            <div class="recent-info">
+                <div class="recent-title">New user signed up</div>
+                <div class="recent-time">2 minutes ago</div>
+            </div>
+            <div class="recent-value">+1</div>
+        </div>
+
+        <div class="recent-item">
+            <div class="recent-icon">📄</div>
+            <div class="recent-info">
+                <div class="recent-title">Content published</div>
+                <div class="recent-time">15 minutes ago</div>
+            </div>
+            <div class="recent-value">+5</div>
+        </div>
+
+        <div class="recent-item">
+            <div class="recent-icon">💰</div>
+            <div class="recent-info">
+                <div class="recent-title">New subscription</div>
+                <div class="recent-time">1 hour ago</div>
+            </div>
+            <div class="recent-value">+₦16,000</div>
+        </div>
+
+        <div class="recent-item">
+            <div class="recent-icon">🔍</div>
+            <div class="recent-info">
+                <div class="recent-title">SEO scan completed</div>
+                <div class="recent-time">3 hours ago</div>
+            </div>
+            <div class="recent-value">92/100</div>
+        </div>
+    </div>
+
+    <script>
+        // Animate numbers on load
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+            
+            const timer = setInterval(function() {
+                current += increment * Math.ceil(range / 50);
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                obj.textContent = current.toLocaleString();
+            }, stepTime);
+        }
+
+        // Run animations on page load
+        window.onload = function() {
+            animateValue("totalViews", 0, 12459, 1000);
+            animateValue("totalUsers", 0, 3847, 1000);
+        };
+    </script>
+</body>
+</html>
