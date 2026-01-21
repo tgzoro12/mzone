@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - MZone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .gradient-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at top, #1a1a3e 0%, #000 50%);
+            z-index: -1;
+        }
+        .container { width: 100%; max-width: 420px; }
+        .logo {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+        }
+        .icon { font-size: 4rem; margin-bottom: 16px; }
+        h1 { font-size: 1.5rem; margin-bottom: 8px; }
+        .card > p { color: #94a3b8; margin-bottom: 24px; }
+        .email-display {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            color: #a78bfa;
+            font-weight: 500;
+        }
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error, .success {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+        .error.show, .success.show { display: block; }
+        .resend {
+            margin-top: 20px;
+            color: #64748b;
+        }
+        .resend button {
+            background: none;
+            border: none;
+            color: #8b5cf6;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .resend button:disabled { color: #64748b; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="container">
+        <div class="logo">🎬 MZone</div>
+        
+        <div class="card">
+            <div class="icon">📧</div>
+            <h1>Check Your Email</h1>
+            <p>We sent a 6-digit code to:</p>
+            <div class="email-display" id="emailDisplay">loading...</div>
+            
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+            
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" class="otp-input" data-index="0">
+                <input type="text" maxlength="1" class="otp-input" data-index="1">
+                <input type="text" maxlength="1" class="otp-input" data-index="2">
+                <input type="text" maxlength="1" class="otp-input" data-index="3">
+                <input type="text" maxlength="1" class="otp-input" data-index="4">
+                <input type="text" maxlength="1" class="otp-input" data-index="5">
+            </div>
+            
+            <button class="btn" id="verifyBtn">Verify Email</button>
+            
+            <p class="resend">
+                Didn't receive code? <button id="resendBtn">Resend OTP</button>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://paystack-backend-9g7t.onrender.com';
+        const email = localStorage.getItem('mzone_verify_email');
+        
+        if (!email) {
+            window.location.href = 'register.html';
+        }
+        
+        document.getElementById('emailDisplay').textContent = email;
+        
+        // OTP input handling
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value && index < 5) {
+                    inputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+        
+        // Verify OTP
+        document.getElementById('verifyBtn').addEventListener('click', async () => {
+            const otp = Array.from(inputs).map(i => i.value).join('');
+            if (otp.length !== 6) {
+                document.getElementById('error').textContent = 'Please enter 6-digit code';
+                document.getElementById('error').classList.add('show');
+                return;
+            }
+            
+            const btn = document.getElementById('verifyBtn');
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+            
+            try {
+                const res = await fetch(`${API_URL}/auth/verify-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, otp })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    localStorage.setItem('mzone_token', data.token);
+                    localStorage.setItem('mzone_user', JSON.stringify(data.user));
+                    localStorage.removeItem('mzone_verify_email');
+                    
+                    document.getElementById('success').textContent = 'Email verified! Redirecting...';
+                    document.getElementById('success').classList.add('show');
+                    document.getElementById('error').classList.remove('show');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'pricing.html';
+                    }, 1500);
+                } else {
+                    document.getElementById('error').textContent = data.message;
+                    document.getElementById('error').classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = 'Verify Email';
+                }
+            } catch (err) {
+                document.getElementById('error').textContent = 'Connection error';
+                document.getElementById('error').classList.add('show');
+                btn.disabled = false;
+                btn.textContent = 'Verify Email';
+            }
+        });
+        
+        // Resend OTP
+        document.getElementById('resendBtn').addEventListener('click', async function() {
+            this.disabled = true;
+            this.textContent = 'Sending...';
+            
+            try {
+                const res = await fetch(`${API_URL}/auth/resend-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    document.getElementById('success').textContent = 'New code sent!';
+                    document.getElementById('success').classList.add('show');
+                }
+                
+                this.textContent = 'Resend OTP';
+                setTimeout(() => { this.disabled = false; }, 30000);
+            } catch (err) {
+                this.textContent = 'Resend OTP';
+                this.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
