@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content AI - MZone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: #3a3a5a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .ai-card h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .template-btn {
+            background: #3a3a5a;
+            border: 2px solid transparent;
+            color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .template-btn:hover, .template-btn.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .template-btn .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .template-btn .label {
+            font-size: 12px;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .input-section textarea {
+            width: 100%;
+            background: #3a3a5a;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            color: #fff;
+            font-size: 14px;
+            resize: none;
+            min-height: 100px;
+        }
+
+        .input-section textarea:focus {
+            outline: 2px solid #667eea;
+        }
+
+        .input-section textarea::placeholder {
+            color: #888;
+        }
+
+        .generate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .generate-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .generate-btn .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        .generate-btn.loading .spinner {
+            display: block;
+        }
+
+        .generate-btn.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .output-section {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 25px;
+            display: none;
+        }
+
+        .output-section.show {
+            display: block;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .output-header h3 {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn {
+            background: #3a3a5a;
+            border: none;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-btn:hover {
+            background: #4a4a6a;
+        }
+
+        .output-text {
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .word-count {
+            text-align: right;
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .history-section {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            background: #3a3a5a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-type {
+            font-size: 12px;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .history-preview {
+            font-size: 13px;
+            color: #aaa;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="dashboard.html" class="back-btn">← Back</a>
+        <h1>✍️ Content AI</h1>
+    </div>
+
+    <div class="ai-card">
+        <h2>📝 Choose Content Type</h2>
+        <div class="template-grid">
+            <button class="template-btn active" data-type="blog">
+                <span class="icon">📄</span>
+                <span class="label">Blog Post</span>
+            </button>
+            <button class="template-btn" data-type="social">
+                <span class="icon">📱</span>
+                <span class="label">Social Post</span>
+            </button>
+            <button class="template-btn" data-type="email">
+                <span class="icon">📧</span>
+                <span class="label">Email</span>
+            </button>
+            <button class="template-btn" data-type="ad">
+                <span class="icon">📢</span>
+                <span class="label">Ad Copy</span>
+            </button>
+            <button class="template-btn" data-type="product">
+                <span class="icon">🛍️</span>
+                <span class="label">Product Desc</span>
+            </button>
+            <button class="template-btn" data-type="headline">
+                <span class="icon">🎯</span>
+                <span class="label">Headlines</span>
+            </button>
+        </div>
+
+        <div class="input-section">
+            <label>What would you like to write about?</label>
+            <textarea id="promptInput" placeholder="E.g., Write a blog post about the benefits of digital marketing for small businesses in Nigeria..."></textarea>
+        </div>
+
+        <button class="generate-btn" id="generateBtn" onclick="generateContent()">
+            <span class="spinner"></span>
+            <span class="btn-text">✨ Generate Content</span>
+        </button>
+    </div>
+
+    <div class="output-section" id="outputSection">
+        <div class="output-header">
+            <h3>✅ Generated Content</h3>
+            <button class="copy-btn" onclick="copyContent()">
+                📋 Copy
+            </button>
+        </div>
+        <div class="output-text" id="outputText"></div>
+        <div class="word-count" id="wordCount"></div>
+    </div>
+
+    <div class="history-section">
+        <h2 style="font-size: 16px; margin-bottom: 15px;">🕐 Recent Generations</h2>
+        <div class="history-item">
+            <div class="history-type">Blog Post</div>
+            <div class="history-preview">10 Tips for Growing Your Business Online in 2025...</div>
+        </div>
+        <div class="history-item">
+            <div class="history-type">Social Post</div>
+            <div class="history-preview">🚀 Ready to take your business to the next level?...</div>
+        </div>
+        <div class="history-item">
+            <div class="history-type">Email</div>
+            <div class="history-preview">Subject: Exclusive Offer Just For You...</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedType = 'blog';
+
+        // Template selection
+        document.querySelectorAll('.template-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedType = this.dataset.type;
+            });
+        });
+
+        // Content templates
+        const contentTemplates = {
+            blog: `# The Ultimate Guide to Digital Success in Nigeria
+
+In today's fast-paced digital world, businesses in Nigeria are discovering new opportunities to grow and thrive online. Here's what you need to know:
+
+## 1. Understanding Your Audience
+Your customers are online, and they're looking for solutions. Understanding their needs is the first step to success.
+
+## 2. Building Your Online Presence
+A strong website and active social media profiles are no longer optional – they're essential for business growth.
+
+## 3. Leveraging Digital Marketing
+From SEO to social media marketing, digital strategies can help you reach thousands of potential customers at a fraction of traditional advertising costs.
+
+## 4. Measuring Your Success
+Track your progress with analytics tools to understand what's working and what needs improvement.
+
+## Conclusion
+The digital revolution is here, and Nigerian businesses that embrace it will thrive. Start your journey today!
+
+---
+*Generated by MZone Content AI*`,
+
+            social: `🚀 Ready to transform your business? 
+
+Here's the secret successful entrepreneurs don't want you to know:
+
+✅ Consistency beats perfection
+✅ Start before you're ready
+✅ Learn from every failure
+✅ Network is net worth
+
+Your success story starts with a single step. Take it today! 💪
+
+#BusinessGrowth #NigerianEntrepreneur #SuccessMindset #MZone`,
+
+            email: `Subject: 🎉 Something Special is Waiting For You!
+
+Hi [Name],
+
+I hope this email finds you well!
+
+I wanted to personally reach out because I believe you're someone who values growth and success.
+
+That's why I'm excited to share an exclusive opportunity with you...
+
+For a limited time, you can access our premium features at a special rate that won't be available again.
+
+Here's what you'll get:
+• Unlimited access to all tools
+• Priority customer support
+• Exclusive training materials
+• And much more!
+
+Don't miss out – this offer expires in 48 hours.
+
+Click here to claim your spot: [Link]
+
+To your success,
+The MZone Team`,
+
+            ad: `🔥 ATTENTION Business Owners! 🔥
+
+Tired of struggling to grow your business?
+
+Discover the #1 tool that's helping Nigerian entrepreneurs:
+✓ Save 10+ hours every week
+✓ Increase sales by up to 300%
+✓ Automate your marketing
+
+Join 5,000+ successful users today!
+
+⚡ Limited Time: Get 50% OFF
+👉 Click to Start Free Trial
+
+No credit card required. Cancel anytime.`,
+
+            product: `✨ Premium Business Dashboard
+
+Transform the way you manage your business with our all-in-one solution.
+
+**Key Features:**
+• 📊 Real-time Analytics
+• 🤖 AI-Powered Insights  
+• 📱 Mobile-Friendly Design
+• 🔒 Bank-Level Security
+• 🇳🇬 Made for Nigerian Businesses
+
+**What's Included:**
+- Unlimited projects
+- Priority support
+- Regular updates
+- Training resources
+
+**Pricing:** Starting at ₦7,000/month
+
+Join thousands of satisfied customers who've transformed their business with MZone.
+
+*30-day money-back guarantee*`,
+
+            headline: `Here are 10 powerful headlines for your content:
+
+1. "The Secret to Growing Your Business That Nobody Talks About"
+
+2. "How I Made ₦1M in 30 Days Using This Simple Strategy"
+
+3. "Warning: Don't Start a Business Until You Read This"
+
+4. "The #1 Mistake Killing Your Business Growth (And How to Fix It)"
+
+5. "Discover Why 90% of Businesses Fail – And How to Be in the 10%"
+
+6. "From Zero to Hero: A Nigerian Success Story"
+
+7. "The Ultimate Guide to Making Money Online in 2025"
+
+8. "Stop Wasting Time: Here's What Actually Works"
+
+9. "This Changed Everything About How I Run My Business"
+
+10. "The Future of Business is Here – Are You Ready?"`
+        };
+
+        function generateContent() {
+            const btn = document.getElementById('generateBtn');
+            const prompt = document.getElementById('promptInput').value;
+            const output = document.getElementById('outputSection');
+            const outputText = document.getElementById('outputText');
+            const wordCount = document.getElementById('wordCount');
+
+            // Show loading
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            // Simulate AI generation (2 seconds)
+            setTimeout(() => {
+                // Get content based on selected type
+                let content = contentTemplates[selectedType];
+                
+                // Show output
+                output.classList.add('show');
+                outputText.textContent = content;
+                
+                // Count words
+                const words = content.split(/\s+/).length;
+                wordCount.textContent = `${words} words`;
+
+                // Reset button
+                btn.classList.remove('loading');
+                btn.disabled = false;
+
+                // Scroll to output
+                output.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        }
+
+        function copyContent() {
+            const text = document.getElementById('outputText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Content copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>
