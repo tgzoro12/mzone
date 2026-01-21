@@ -32,7 +32,7 @@
             background: white;
             border-radius: 20px;
             padding: 40px;
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             text-align: center;
@@ -63,30 +63,48 @@
         }
         .features li::before { content: "✅ "; }
         
-        .subscribe-btn {
+        .btn-primary {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             color: white;
             border: none;
-            padding: 18px 40px;
-            font-size: 1.2rem;
+            padding: 16px 40px;
+            font-size: 1.1rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 15px;
         }
         
-        .login-link {
-            margin-top: 20px;
-            color: #666;
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #6366f1;
+            color: #6366f1;
+            padding: 14px 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #999;
             font-size: 0.9rem;
         }
-        .login-link a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ddd;
         }
+        .divider span { padding: 0 15px; }
         
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -109,8 +127,10 @@
             max-width: 400px;
             width: 100%;
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        .modal-content h2 { margin-bottom: 20px; color: #1a1a2e; }
+        .modal-content h2 { margin-bottom: 20px; color: #1a1a2e; text-align: center; }
         
         .close-btn {
             position: absolute;
@@ -130,7 +150,7 @@
         }
         .form-group input {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1rem;
@@ -140,11 +160,11 @@
             border-color: #6366f1;
         }
         
-        .pay-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        .modal-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             color: white;
             border: none;
-            padding: 18px;
+            padding: 16px;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 10px;
@@ -153,11 +173,51 @@
             margin-top: 10px;
         }
         
+        .modal-btn.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .switch-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+        .switch-text a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
         .secure-text {
             margin-top: 15px;
             font-size: 0.85rem;
             color: #666;
+            text-align: center;
         }
+        
+        .error-msg {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .error-msg.show { display: block; }
+        
+        .success-msg {
+            background: #d1fae5;
+            color: #059669;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .success-msg.show { display: block; }
         
         /* Telegram Warning */
         .telegram-warning {
@@ -236,7 +296,7 @@
             <h2>Open in Browser</h2>
             <p>For secure payment, please open this page in Chrome or Safari.</p>
             
-            <a href="https://tgzoro12.github.io/mzone/?v=1001" target="_blank" class="open-browser-btn">
+            <a href="https://tgzoro12.github.io/mzone/?v=1002" target="_blank" class="open-browser-btn">
                 Open in Browser 🌐
             </a>
             
@@ -269,38 +329,84 @@
             <li>Early Access to New Content</li>
         </ul>
         
-        <button class="subscribe-btn" onclick="openModal()">Subscribe Now 🚀</button>
+        <button class="btn-primary" onclick="openSignupModal()">Subscribe Now 🚀</button>
         
-        <p class="login-link">Already subscribed? <a href="dashboard.html">Access Dashboard</a></p>
+        <div class="divider"><span>or</span></div>
+        
+        <button class="btn-secondary" onclick="openLoginModal()">Login to Dashboard</button>
     </div>
     
-    <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2>💳 Complete Payment</h2>
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h2>📝 Create Account & Pay</h2>
             
-            <form id="paymentForm">
+            <div class="error-msg" id="signupError"></div>
+            
+            <form id="signupForm">
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" placeholder="Enter your full name" required>
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
                 </div>
                 
-                <button type="submit" class="pay-btn" id="payBtn">Pay ₦16,000 Now</button>
+                <div class="form-group">
+                    <label for="signupPassword">Create Password</label>
+                    <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupConfirm">Confirm Password</label>
+                    <input type="password" id="signupConfirm" placeholder="Confirm your password" required>
+                </div>
+                
+                <button type="submit" class="modal-btn green" id="signupBtn">Create Account & Pay ₦16,000</button>
             </form>
             
+            <p class="switch-text">Already have an account? <a onclick="switchToLogin()">Login here</a></p>
             <p class="secure-text">🔒 Secured by Paystack</p>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h2>🔐 Login to Dashboard</h2>
+            
+            <div class="error-msg" id="loginError"></div>
+            <div class="success-msg" id="loginSuccess"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="modal-btn" id="loginBtn">Login</button>
+            </form>
+            
+            <p class="switch-text">Don't have an account? <a onclick="switchToSignup()">Subscribe now</a></p>
         </div>
     </div>
     
     <script>
         // ===== VERSION FOR CACHE BUSTING =====
-        var APP_VERSION = '1001';
+        var APP_VERSION = '1002';
+        
+        // ===== YOUR ADMIN CREDENTIALS (CHANGE THESE!) =====
+        var ADMIN_EMAIL = 'admin@mzone.com';  // Change to your email
+        var ADMIN_PASSWORD = 'MZone@2025';     // Change to your password
         
         // ===== WEBVIEW DETECTION =====
         function isInAppBrowser() {
@@ -318,10 +424,19 @@
         
         // ===== ON PAGE LOAD =====
         window.onload = function() {
-            // Show Telegram warning if in WebView
             if (isInAppBrowser()) {
                 document.getElementById('telegramWarning').classList.add('show');
                 document.getElementById('mainContent').style.display = 'none';
+            }
+            
+            // Check if already logged in with valid subscription
+            var currentUser = localStorage.getItem('mzone_current_user');
+            if (currentUser) {
+                var users = JSON.parse(localStorage.getItem('mzone_users') || '{}');
+                var user = users[currentUser];
+                if (user && user.subscribed && user.expiry > Date.now()) {
+                    window.location.href = 'dashboard.html';
+                }
             }
         };
         
@@ -330,7 +445,7 @@
             var url = 'https://tgzoro12.github.io/mzone/?v=' + APP_VERSION;
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(url).then(function() {
-                    alert('✅ Link copied!\\n\\nPaste it in Chrome or Safari.');
+                    alert('✅ Link copied!\n\nPaste it in Chrome or Safari.');
                 });
             } else {
                 var textArea = document.createElement('textarea');
@@ -339,29 +454,68 @@
                 textArea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
-                alert('✅ Link copied!\\n\\nPaste it in Chrome or Safari.');
+                alert('✅ Link copied!\n\nPaste it in Chrome or Safari.');
             }
         }
         
         // ===== MODAL FUNCTIONS =====
-        function openModal() {
+        function openSignupModal() {
             if (isInAppBrowser()) {
                 alert('⚠️ Please open in Chrome or Safari browser first.');
                 return;
             }
-            document.getElementById('paymentModal').classList.add('active');
+            closeAllModals();
+            document.getElementById('signupModal').classList.add('active');
         }
         
-        function closeModal() {
-            document.getElementById('paymentModal').classList.remove('active');
+        function openLoginModal() {
+            closeAllModals();
+            document.getElementById('loginModal').classList.add('active');
         }
         
-        document.getElementById('paymentModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
+        function closeAllModals() {
+            document.getElementById('signupModal').classList.remove('active');
+            document.getElementById('loginModal').classList.remove('active');
+            // Clear errors
+            document.getElementById('signupError').classList.remove('show');
+            document.getElementById('loginError').classList.remove('show');
+            document.getElementById('loginSuccess').classList.remove('show');
+        }
+        
+        function switchToLogin() {
+            closeAllModals();
+            openLoginModal();
+        }
+        
+        function switchToSignup() {
+            closeAllModals();
+            openSignupModal();
+        }
+        
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(function(modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) closeAllModals();
+            });
         });
         
-        // ===== PAYMENT =====
-        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        // ===== USER DATABASE (localStorage) =====
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('mzone_users') || '{}');
+        }
+        
+        function saveUsers(users) {
+            localStorage.setItem('mzone_users', JSON.stringify(users));
+        }
+        
+        function showError(elementId, message) {
+            var el = document.getElementById(elementId);
+            el.textContent = message;
+            el.classList.add('show');
+        }
+        
+        // ===== SIGNUP FORM =====
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             if (isInAppBrowser()) {
@@ -369,44 +523,163 @@
                 return;
             }
             
-            var email = document.getElementById('email').value.trim();
-            var name = document.getElementById('name').value.trim();
-            var payBtn = document.getElementById('payBtn');
+            var name = document.getElementById('signupName').value.trim();
+            var email = document.getElementById('signupEmail').value.trim().toLowerCase();
+            var password = document.getElementById('signupPassword').value;
+            var confirm = document.getElementById('signupConfirm').value;
+            var signupBtn = document.getElementById('signupBtn');
             
-            if (!email || !name) {
-                alert('Please fill in all fields');
+            // Validation
+            if (!name || !email || !password || !confirm) {
+                showError('signupError', 'Please fill in all fields');
                 return;
             }
             
-            payBtn.disabled = true;
-            payBtn.textContent = 'Processing...';
+            if (password.length < 6) {
+                showError('signupError', 'Password must be at least 6 characters');
+                return;
+            }
             
+            if (password !== confirm) {
+                showError('signupError', 'Passwords do not match');
+                return;
+            }
+            
+            // Check if user exists
+            var users = getUsers();
+            if (users[email]) {
+                showError('signupError', 'Email already registered. Please login instead.');
+                return;
+            }
+            
+            signupBtn.disabled = true;
+            signupBtn.textContent = 'Processing...';
+            
+            // Process payment with Paystack
             var handler = PaystackPop.setup({
                 key: 'pk_live_18794be9809d543f92489b74092f937800df5aa8',
                 email: email,
                 amount: 1600000,
                 currency: 'NGN',
                 ref: 'MZ_' + Date.now(),
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Name", variable_name: "name", value: name }
+                    ]
+                },
                 callback: function(response) {
-                    // Save subscription data
+                    // Payment successful - create account
                     var expiry = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30 days
-                    localStorage.setItem('mzone_subscribed', 'true');
-                    localStorage.setItem('mzone_email', email);
-                    localStorage.setItem('mzone_name', name);
-                    localStorage.setItem('mzone_ref', response.reference);
-                    localStorage.setItem('mzone_expiry', expiry.toString());
+                    
+                    users[email] = {
+                        name: name,
+                        email: email,
+                        password: password, // In production, HASH this!
+                        subscribed: true,
+                        expiry: expiry,
+                        ref: response.reference,
+                        createdAt: Date.now()
+                    };
+                    
+                    saveUsers(users);
+                    localStorage.setItem('mzone_current_user', email);
                     
                     window.location.href = 'dashboard.html?status=success&ref=' + response.reference;
                 },
                 onClose: function() {
-                    payBtn.disabled = false;
-                    payBtn.textContent = 'Pay ₦16,000 Now';
+                    signupBtn.disabled = false;
+                    signupBtn.textContent = 'Create Account & Pay ₦16,000';
                     alert('Payment cancelled');
                 }
             });
             
             handler.openIframe();
         });
+        
+        // ===== LOGIN FORM =====
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            var password = document.getElementById('loginPassword').value;
+            var loginBtn = document.getElementById('loginBtn');
+            
+            // Hide previous messages
+            document.getElementById('loginError').classList.remove('show');
+            document.getElementById('loginSuccess').classList.remove('show');
+            
+            // Check for admin login
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                localStorage.setItem('mzone_current_user', 'admin');
+                localStorage.setItem('mzone_is_admin', 'true');
+                document.getElementById('loginSuccess').textContent = '✅ Admin login successful! Redirecting...';
+                document.getElementById('loginSuccess').classList.add('show');
+                setTimeout(function() {
+                    window.location.href = 'dashboard.html?admin=true';
+                }, 1000);
+                return;
+            }
+            
+            // Check regular user
+            var users = getUsers();
+            var user = users[email];
+            
+            if (!user) {
+                showError('loginError', 'Email not found. Please sign up first.');
+                return;
+            }
+            
+            if (user.password !== password) {
+                showError('loginError', 'Incorrect password. Please try again.');
+                return;
+            }
+            
+            // Check subscription
+            if (!user.subscribed || user.expiry < Date.now()) {
+                showError('loginError', 'Your subscription has expired. Please renew.');
+                // Offer to renew
+                setTimeout(function() {
+                    if (confirm('Your subscription expired. Would you like to renew now?')) {
+                        renewSubscription(email, user);
+                    }
+                }, 500);
+                return;
+            }
+            
+            // Login successful
+            localStorage.setItem('mzone_current_user', email);
+            document.getElementById('loginSuccess').textContent = '✅ Login successful! Redirecting...';
+            document.getElementById('loginSuccess').classList.add('show');
+            
+            setTimeout(function() {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        });
+        
+        // ===== RENEW SUBSCRIPTION =====
+        function renewSubscription(email, user) {
+            var handler = PaystackPop.setup({
+                key: 'pk_live_18794be9809d543f92489b74092f937800df5aa8',
+                email: email,
+                amount: 1600000,
+                currency: 'NGN',
+                ref: 'MZ_RENEW_' + Date.now(),
+                callback: function(response) {
+                    var users = getUsers();
+                    users[email].subscribed = true;
+                    users[email].expiry = Date.now() + (30 * 24 * 60 * 60 * 1000);
+                    users[email].ref = response.reference;
+                    saveUsers(users);
+                    
+                    localStorage.setItem('mzone_current_user', email);
+                    window.location.href = 'dashboard.html?status=renewed';
+                },
+                onClose: function() {
+                    alert('Renewal cancelled');
+                }
+            });
+            handler.openIframe();
+        }
     </script>
 </body>
 </html>
