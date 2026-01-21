@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     
-    <!-- Prevent Caching -->
+    <!-- CRITICAL: Prevent Caching -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -79,6 +79,14 @@
             text-decoration: none;
             display: inline-block;
         }
+        .access-denied .reason {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
         
         /* Dashboard Content */
         .dashboard { display: none; }
@@ -136,10 +144,6 @@
         .admin-badge {
             background: rgba(239, 68, 68, 0.2);
             color: #ef4444;
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
         }
         .logout-btn {
             background: transparent;
@@ -150,6 +154,11 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
         }
         
         .main-content {
@@ -205,6 +214,7 @@
             text-decoration: none;
             color: #fff;
             transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
         }
         .tool-card:hover {
             transform: translateY(-4px);
@@ -227,24 +237,6 @@
             gap: 10px;
         }
         
-        .activity-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #334155;
-        }
-        .activity-item:last-child { border-bottom: none; }
-        .activity-dot {
-            width: 10px;
-            height: 10px;
-            background: #10b981;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .activity-text { flex: 1; font-size: 0.9rem; }
-        .activity-time { color: #64748b; font-size: 0.75rem; }
-        
         .subscription-info {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.3);
@@ -255,22 +247,35 @@
         .subscription-info p {
             color: #10b981;
             font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         .subscription-info.admin {
             background: rgba(239, 68, 68, 0.1);
             border-color: rgba(239, 68, 68, 0.3);
         }
         .subscription-info.admin p { color: #ef4444; }
+        .subscription-info.expiring {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .subscription-info.expiring p { color: #f59e0b; }
+        
+        .renew-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="spinner"></div>
-        <p class="loading-text">Verifying subscription...</p>
+        <p class="loading-text">Verifying access...</p>
     </div>
     
     <!-- Access Denied Screen -->
@@ -278,8 +283,9 @@
         <div class="box">
             <div class="icon">🔒</div>
             <h1>Access Denied</h1>
-            <p>You need an active subscription to access the dashboard. Please login with a valid subscription or subscribe now.</p>
-            <a href="index.html" class="btn">Subscribe Now 🚀</a>
+            <div class="reason" id="denialReason">No valid subscription found.</div>
+            <p>Please login with an active subscription to access the dashboard.</p>
+            <a href="index.html" class="btn">Go to Login 🚀</a>
         </div>
     </div>
     
@@ -287,13 +293,13 @@
     <div class="dashboard" id="dashboardContent">
         <nav class="navbar">
             <div class="container">
-                <a href="#" class="logo">
+                <a href="dashboard.html" class="logo">
                     <span class="logo-icon">M</span>
                     MZone
                 </a>
                 <div class="user-info">
                     <span class="user-badge" id="userBadge">⭐ Premium</span>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <button class="logout-btn" onclick="MZoneDashboard.logout()">Logout</button>
                 </div>
             </div>
         </nav>
@@ -301,7 +307,7 @@
         <main class="main-content">
             <div class="welcome-card">
                 <h1>Welcome back, <span id="userName">User</span>! 🎉</h1>
-                <p>You have full access to all premium features.</p>
+                <p id="welcomeMsg">You have full access to all premium features.</p>
             </div>
             
             <div class="stats-grid">
@@ -322,155 +328,359 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⭐</div>
-                    <div class="stat-number">∞</div>
-                    <div class="stat-label">Access</div>
+                    <div class="stat-number" id="daysLeft">∞</div>
+                    <div class="stat-label">Days Left</div>
                 </div>
             </div>
             
             <h2 class="section-title">🛠️ Pro Tools</h2>
             <div class="tools-grid">
-                <a href="analytics.html" class="tool-card">
+                <div class="tool-card" onclick="MZoneDashboard.openTool('analytics.html')">
                     <span class="tool-icon">📊</span>
                     <span class="tool-name">Analytics</span>
-                </a>
-                <a href="content-ai.html" class="tool-card">
+                </div>
+                <div class="tool-card" onclick="MZoneDashboard.openTool('content-ai.html')">
                     <span class="tool-icon">✍️</span>
                     <span class="tool-name">Content AI</span>
-                </a>
-                <a href="seo-tool.html" class="tool-card">
+                </div>
+                <div class="tool-card" onclick="MZoneDashboard.openTool('seo-tool.html')">
                     <span class="tool-icon">🔍</span>
                     <span class="tool-name">SEO Tool</span>
-                </a>
-                <a href="budget.html" class="tool-card">
+                </div>
+                <div class="tool-card" onclick="MZoneDashboard.openTool('budget.html')">
                     <span class="tool-icon">💰</span>
                     <span class="tool-name">Budget</span>
-                </a>
+                </div>
             </div>
             
             <h2 class="section-title">💡 Quick Actions</h2>
             <div class="tools-grid">
-                <a href="resources.html" class="tool-card">
+                <div class="tool-card" onclick="MZoneDashboard.openTool('resources.html')">
                     <span class="tool-icon">📚</span>
                     <span class="tool-name">Resources</span>
-                </a>
-                <a href="tutorials.html" class="tool-card">
+                </div>
+                <div class="tool-card" onclick="MZoneDashboard.openTool('tutorials.html')">
                     <span class="tool-icon">🎓</span>
                     <span class="tool-name">Tutorials</span>
-                </a>
+                </div>
             </div>
             
             <div class="content-card">
-                <h3>📋 Recent Activity</h3>
-                <div class="activity-item">
-                    <span class="activity-dot"></span>
-                    <span class="activity-text">Dashboard accessed</span>
-                    <span class="activity-time">Just now</span>
-                </div>
-                <div class="activity-item">
-                    <span class="activity-dot"></span>
-                    <span class="activity-text">Login successful</span>
-                    <span class="activity-time">Just now</span>
-                </div>
-                <div class="activity-item">
-                    <span class="activity-dot"></span>
-                    <span class="activity-text">Subscription active</span>
-                    <span class="activity-time">Active</span>
-                </div>
-                
+                <h3>📋 Subscription Status</h3>
                 <div class="subscription-info" id="subscriptionInfo">
-                    <p>✅ Your subscription is active until <strong id="expiryDate">-</strong></p>
+                    <p id="subscriptionText">✅ Your subscription is active</p>
+                    <button class="renew-btn" id="renewBtn" style="display: none;" onclick="MZoneDashboard.renewSubscription()">Renew Now</button>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- Paystack for renewals -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     
     <script>
-        // ===== ADMIN CREDENTIALS (Must match index.html) =====
-        var ADMIN_EMAIL = 'admin@mzone.com';
+    // ============================================================
+    // MZONE DASHBOARD - SECURE ACCESS CONTROLLER
+    // ============================================================
+
+    const MZoneDashboard = (function() {
+        'use strict';
         
-        // ===== ON PAGE LOAD =====
-        window.onload = function() {
-            setTimeout(checkAccess, 800);
+        // ===== CONFIGURATION (must match index.html) =====
+        const CONFIG = {
+            PAYSTACK_KEY: 'pk_live_18794be9809d543f92489b74092f937800df5aa8',
+            SUBSCRIPTION_DAYS: 30,
+            SUBSCRIPTION_AMOUNT: 1600000,
+            SECRET_KEY: 'MZ_' + btoa(navigator.userAgent.slice(0, 20) + screen.width)
         };
         
-        function checkAccess() {
-            var loadingScreen = document.getElementById('loadingScreen');
-            var accessDenied = document.getElementById('accessDenied');
-            var dashboard = document.getElementById('dashboardContent');
-            
-            var currentUser = localStorage.getItem('mzone_current_user');
-            var isAdmin = localStorage.getItem('mzone_is_admin') === 'true';
-            var urlParams = new URLSearchParams(window.location.search);
-            var adminParam = urlParams.get('admin');
-            
-            // Hide loading
-            loadingScreen.classList.add('hide');
-            
-            // Check if admin
-            if (currentUser === 'admin' || isAdmin || adminParam === 'true') {
-                showDashboard('Admin', true);
-                return;
+        // ===== CRYPTO UTILITIES (same as index.html) =====
+        function generateHMAC(data) {
+            const str = JSON.stringify(data) + CONFIG.SECRET_KEY;
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
             }
-            
-            // Check if no user logged in
-            if (!currentUser) {
-                accessDenied.classList.add('show');
-                return;
-            }
-            
-            // Check user subscription
-            var users = JSON.parse(localStorage.getItem('mzone_users') || '{}');
-            var user = users[currentUser];
-            
-            if (!user) {
-                accessDenied.classList.add('show');
-                return;
-            }
-            
-            if (!user.subscribed || user.expiry < Date.now()) {
-                // Subscription expired
-                accessDenied.classList.add('show');
-                return;
-            }
-            
-            // Valid subscription - show dashboard
-            showDashboard(user.name, false, user.expiry);
+            return Math.abs(hash).toString(16);
         }
         
-        function showDashboard(name, isAdmin, expiry) {
-            var dashboard = document.getElementById('dashboardContent');
-            dashboard.classList.add('show');
+        // ===== SECURE STORAGE (same as index.html) =====
+        const SecureStorage = {
+            getItem(key) {
+                try {
+                    const raw = localStorage.getItem('mz_' + key);
+                    if (!raw) return null;
+                    
+                    const data = JSON.parse(raw);
+                    const expectedHMAC = generateHMAC({ value: data.value, key });
+                    
+                    if (data.hmac !== expectedHMAC) {
+                        console.warn('Data integrity check failed');
+                        localStorage.removeItem('mz_' + key);
+                        return null;
+                    }
+                    
+                    return data.value;
+                } catch (e) {
+                    return null;
+                }
+            },
+            
+            setItem(key, value) {
+                const data = {
+                    value: value,
+                    timestamp: Date.now(),
+                    hmac: generateHMAC({ value, key })
+                };
+                localStorage.setItem('mz_' + key, JSON.stringify(data));
+            },
+            
+            removeItem(key) {
+                localStorage.removeItem('mz_' + key);
+            }
+        };
+        
+        // ===== ACCESS VERIFICATION =====
+        function verifyAccess() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Get session
+                    const session = SecureStorage.getItem('session');
+                    
+                    // No session = no access
+                    if (!session) {
+                        resolve({ valid: false, reason: 'No active session. Please login.' });
+                        return;
+                    }
+                    
+                    // Check session expiry
+                    if (Date.now() > session.expiresAt) {
+                        SecureStorage.removeItem('session');
+                        sessionStorage.removeItem('mz_active');
+                        resolve({ valid: false, reason: 'Session expired. Please login again.' });
+                        return;
+                    }
+                    
+                    // Check tab session
+                    if (sessionStorage.getItem('mz_active') !== 'true') {
+                        resolve({ valid: false, reason: 'Session not active in this tab. Please login.' });
+                        return;
+                    }
+                    
+                    // Admin access
+                    if (session.isAdmin) {
+                        resolve({ 
+                            valid: true, 
+                            isAdmin: true, 
+                            name: 'Admin',
+                            email: session.email
+                        });
+                        return;
+                    }
+                    
+                    // Get user data
+                    const users = SecureStorage.getItem('users') || {};
+                    const user = users[session.email];
+                    
+                    if (!user) {
+                        SecureStorage.removeItem('session');
+                        resolve({ valid: false, reason: 'User account not found.' });
+                        return;
+                    }
+                    
+                    // Check subscription
+                    if (!user.subscribed) {
+                        resolve({ valid: false, reason: 'No active subscription. Please subscribe.' });
+                        return;
+                    }
+                    
+                    if (!user.subscriptionExpiry || user.subscriptionExpiry < Date.now()) {
+                        resolve({ 
+                            valid: false, 
+                            reason: 'Subscription expired. Please renew.',
+                            canRenew: true,
+                            email: session.email
+                        });
+                        return;
+                    }
+                    
+                    // Calculate days remaining
+                    const daysLeft = Math.ceil((user.subscriptionExpiry - Date.now()) / (24 * 60 * 60 * 1000));
+                    
+                    resolve({
+                        valid: true,
+                        isAdmin: false,
+                        name: user.name,
+                        email: user.email,
+                        expiry: user.subscriptionExpiry,
+                        daysLeft: daysLeft
+                    });
+                    
+                }, 500); // Small delay for loading animation
+            });
+        }
+        
+        // ===== RENDER FUNCTIONS =====
+        function showDashboard(data) {
+            document.getElementById('loadingScreen').classList.add('hide');
+            document.getElementById('dashboardContent').classList.add('show');
             
             // Set user name
-            var firstName = name ? name.split(' ')[0] : 'User';
+            const firstName = data.name ? data.name.split(' ')[0] : 'User';
             document.getElementById('userName').textContent = firstName;
             
-            if (isAdmin) {
+            if (data.isAdmin) {
                 // Admin view
                 document.getElementById('userBadge').textContent = '👑 Admin';
-                document.getElementById('userBadge').className = 'admin-badge';
-                document.getElementById('subscriptionInfo').className = 'subscription-info admin';
-                document.getElementById('subscriptionInfo').innerHTML = '<p>👑 Admin account - Unlimited access</p>';
+                document.getElementById('userBadge').classList.add('admin-badge');
+                document.getElementById('daysLeft').textContent = '∞';
+                document.getElementById('subscriptionInfo').classList.add('admin');
+                document.getElementById('subscriptionText').textContent = '👑 Admin account - Unlimited access';
+                document.getElementById('welcomeMsg').textContent = 'You have admin access to all features.';
             } else {
                 // Regular user
-                if (expiry) {
-                    var expiryDate = new Date(expiry);
-                    document.getElementById('expiryDate').textContent = expiryDate.toLocaleDateString('en-NG', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
+                document.getElementById('daysLeft').textContent = data.daysLeft;
+                
+                const expiryDate = new Date(data.expiry).toLocaleDateString('en-NG', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                if (data.daysLeft <= 7) {
+                    // Expiring soon warning
+                    document.getElementById('subscriptionInfo').classList.add('expiring');
+                    document.getElementById('subscriptionText').innerHTML = 
+                        `⚠️ Your subscription expires on <strong>${expiryDate}</strong> (${data.daysLeft} days left)`;
+                    document.getElementById('renewBtn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('subscriptionText').innerHTML = 
+                        `✅ Your subscription is active until <strong>${expiryDate}</strong>`;
                 }
             }
         }
         
+        function showAccessDenied(reason) {
+            document.getElementById('loadingScreen').classList.add('hide');
+            document.getElementById('denialReason').textContent = reason;
+            document.getElementById('accessDenied').classList.add('show');
+        }
+        
+        // ===== TOOL ACCESS =====
+        function openTool(toolPage) {
+            // Re-verify access before opening any tool
+            verifyAccess().then(result => {
+                if (result.valid) {
+                    window.location.href = toolPage;
+                } else {
+                    alert('⚠️ ' + result.reason);
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+        
+        // ===== LOGOUT =====
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('mzone_current_user');
-                localStorage.removeItem('mzone_is_admin');
+                SecureStorage.removeItem('session');
+                sessionStorage.clear();
                 window.location.href = 'index.html';
             }
         }
+        
+        // ===== SUBSCRIPTION RENEWAL =====
+        function renewSubscription() {
+            const session = SecureStorage.getItem('session');
+            if (!session || !session.email) {
+                alert('Session error. Please login again.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const users = SecureStorage.getItem('users') || {};
+            const user = users[session.email];
+            
+            if (!user) {
+                alert('User not found. Please login again.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const handler = PaystackPop.setup({
+                key: CONFIG.PAYSTACK_KEY,
+                email: session.email,
+                amount: CONFIG.SUBSCRIPTION_AMOUNT,
+                currency: 'NGN',
+                ref: 'MZ_RENEW_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Name", variable_name: "name", value: user.name },
+                        { display_name: "Type", variable_name: "type", value: "Renewal" }
+                    ]
+                },
+                callback: function(response) {
+                    const newExpiry = Date.now() + (CONFIG.SUBSCRIPTION_DAYS * 24 * 60 * 60 * 1000);
+                    
+                    user.subscribed = true;
+                    user.subscriptionExpiry = newExpiry;
+                    user.paymentReference = response.reference;
+                    user.lastPayment = Date.now();
+                    
+                    users[session.email] = user;
+                    SecureStorage.setItem('users', users);
+                    
+                    alert('✅ Subscription renewed successfully!');
+                    window.location.reload();
+                },
+                onClose: function() {
+                    alert('Renewal cancelled.');
+                }
+            });
+            
+            handler.openIframe();
+        }
+        
+        // ===== INITIALIZATION =====
+        function init() {
+            // Immediately start verification
+            verifyAccess().then(result => {
+                if (result.valid) {
+                    showDashboard(result);
+                } else {
+                    showAccessDenied(result.reason);
+                }
+            });
+            
+            // Prevent back button showing cached content
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            });
+            
+            // Check access periodically (every 30 seconds)
+            setInterval(() => {
+                verifyAccess().then(result => {
+                    if (!result.valid) {
+                        alert('⚠️ ' + result.reason);
+                        window.location.href = 'index.html';
+                    }
+                });
+            }, 30000);
+        }
+        
+        // Run immediately
+        init();
+        
+        // ===== PUBLIC API =====
+        return {
+            logout,
+            openTool,
+            renewSubscription
+        };
+    })();
     </script>
 </body>
 </html>
