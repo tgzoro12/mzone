@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 50px; background: #1a1a2e; color: white; }
+        button { background: #6366f1; color: white; padding: 20px 40px; font-size: 18px; border: none; border-radius: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>MZone Test</h1>
+    <p>Click to test payment</p>
+    <button onclick="payNow()">Pay ₦16,000</button>
+
+    <script>
+        function payNow() {
+            var handler = PaystackPop.setup({
+                key: 'pk_test_ab6a57e4c8fd4dfc8073528b6ac4e88833001c11',
+                email: 'test@email.com',
+                amount: 1600000,
+                currency: 'NGN',
+                callback: function(response) {
+                    alert('Success! Ref: ' + response.reference);
+                },
+                onClose: function() {
+                    alert('Closed');
+                }
+            });
+            handler.openIframe();
+        }
+    </script>
+</body>
+</html>
