@@ -1,84 +1,50 @@
 // ============================================================
-// MZONE AUTH GUARD - Protects all tool pages
+// MZONE AUTH GUARD v3 - Protects all tool pages
 // ============================================================
 
 (function() {
     'use strict';
     
-    var SECRET_KEY = 'MZ_' + btoa(navigator.userAgent.slice(0, 20) + screen.width);
+    var STORAGE_KEY = 'mzone_data_v3';
     
-    function generateHMAC(data) {
-        var str = JSON.stringify(data) + SECRET_KEY;
-        var hash = 0;
-        for (var i = 0; i < str.length; i++) {
-            var char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash;
-        }
-        return Math.abs(hash).toString(16);
-    }
-    
-    function getSecureItem(key) {
+    function getData() {
         try {
-            var raw = localStorage.getItem('mz_' + key);
-            if (!raw) return null;
-            
-            var data = JSON.parse(raw);
-            var expectedHMAC = generateHMAC({ value: data.value, key: key });
-            
-            if (data.hmac !== expectedHMAC) {
-                localStorage.removeItem('mz_' + key);
-                return null;
-            }
-            
-            return data.value;
+            var data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : { users: {}, currentUser: null };
         } catch (e) {
-            return null;
+            return { users: {}, currentUser: null };
         }
     }
     
     function checkAccess() {
-        var session = getSecureItem('session');
+        var data = getData();
         
-        // No session = not logged in
-        if (!session) {
+        // No logged in user
+        if (!data.currentUser) {
             redirectToLogin('Please login first');
             return;
         }
         
-        // Session expired
-        if (Date.now() > session.expiresAt) {
-            redirectToLogin('Session expired. Please login again');
-            return;
-        }
-        
-        // Tab session check
-        if (sessionStorage.getItem('mz_active') !== 'true') {
-            redirectToLogin('Please login to access this page');
-            return;
-        }
-        
         // Admin always has access
-        if (session.isAdmin) {
-            return; // Allow access
+        if (data.currentUser === 'admin' || data.isAdmin) {
+            return; // Allow
         }
         
-        // Check user subscription
-        var users = getSecureItem('users') || {};
-        var user = users[session.email];
+        // Regular user
+        var user = data.users[data.currentUser];
         
         if (!user) {
-            redirectToLogin('User not found. Please signup');
+            redirectToLogin('User not found');
             return;
         }
         
         if (!user.subscribed) {
-            redirectToLogin('Please subscribe to access this page');
+            redirectToLogin('Please subscribe to access');
             return;
         }
         
-        if (!user.subscriptionExpiry || user.subscriptionExpiry < Date.now()) {
-            redirectToLogin('Your subscription has expired. Please renew');
+        if (!user.expiry || user.expiry < Date.now()) {
+            redirectToLogin('Subscription expired');
             return;
         }
         
@@ -90,10 +56,10 @@
         window.location.href = 'index.html';
     }
     
-    // Check access immediately when page loads
+    // Check immediately
     checkAccess();
     
-    // Check when user switches back to this tab
+    // Check when tab becomes visible
     document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
             checkAccess();
@@ -103,7 +69,7 @@
     // Check every 30 seconds
     setInterval(checkAccess, 30000);
     
-    // Check when using browser back button
+    // Check on back button
     window.addEventListener('pageshow', function(event) {
         if (event.persisted) {
             checkAccess();
