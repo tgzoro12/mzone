@@ -85,6 +85,7 @@
             background: linear-gradient(135deg, #6366f1, #10b981);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .hero p {
             font-size: 1.1rem;
@@ -155,10 +156,7 @@
         }
         .pricing-card.popular {
             border-color: #6366f1;
-            transform: scale(1.05);
-        }
-        .pricing-card.popular:hover {
-            transform: scale(1.08);
+            transform: scale(1.02);
         }
         .popular-badge {
             position: absolute;
@@ -211,14 +209,10 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
+            transition: transform 0.2s;
         }
         .pricing-btn:hover {
             transform: scale(1.02);
-        }
-        .pricing-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
         }
         .pricing-btn.primary {
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -277,36 +271,6 @@
         .testimonial-role {
             font-size: 0.85rem;
             color: #94a3b8;
-        }
-
-        .faq {
-            padding: 60px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .faq h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 40px;
-        }
-        .faq-item {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 12px;
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-        .faq-question {
-            padding: 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-        }
-        .faq-answer {
-            padding: 0 20px 20px;
-            color: #94a3b8;
-            line-height: 1.6;
         }
 
         .cta {
@@ -536,7 +500,7 @@
         <h2>What Our Members Say</h2>
         <div class="testimonial-grid">
             <div class="testimonial-card">
-                <p>"MZone has completely transformed how I run my business. The tools are incredible and the community is so supportive!"</p>
+                <p>"MZone has completely transformed how I run my business. The tools are incredible!"</p>
                 <div class="testimonial-author">
                     <div class="testimonial-avatar">A</div>
                     <div>
@@ -546,7 +510,7 @@
                 </div>
             </div>
             <div class="testimonial-card">
-                <p>"I made back my subscription fee in the first week! The AI content tools alone are worth 10x the price."</p>
+                <p>"I made back my subscription fee in the first week! The AI content tools are amazing."</p>
                 <div class="testimonial-author">
                     <div class="testimonial-avatar">C</div>
                     <div>
@@ -556,7 +520,7 @@
                 </div>
             </div>
             <div class="testimonial-card">
-                <p>"Best investment I've made this year. The tutorials helped me start my online business from scratch."</p>
+                <p>"Best investment I've made this year. Highly recommended!"</p>
                 <div class="testimonial-author">
                     <div class="testimonial-avatar">E</div>
                     <div>
@@ -565,27 +529,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="faq">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-item">
-            <div class="faq-question">How do I access the dashboard after payment?</div>
-            <div class="faq-answer">After successful payment, you'll be automatically redirected to your premium dashboard with full access to all features.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question">Can I cancel my subscription anytime?</div>
-            <div class="faq-answer">Yes! You can cancel anytime. You'll continue to have access until the end of your billing period.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question">What payment methods do you accept?</div>
-            <div class="faq-answer">We accept all Nigerian bank cards, bank transfers, and USSD payments through Paystack.</div>
-        </div>
-        <div class="faq-item">
-            <div class="faq-question">Is there a refund policy?</div>
-            <div class="faq-answer">Yes, we offer a 7-day money-back guarantee if you're not satisfied with the service.</div>
         </div>
     </section>
 
@@ -614,7 +557,7 @@
                 <label>Email Address</label>
                 <input type="email" id="customerEmail" placeholder="Enter your email" required>
             </div>
-            <button class="modal-btn" id="payBtn" onclick="payWithPaystack()">Pay Now</button>
+            <button class="modal-btn" onclick="payWithPaystack()">Pay Now</button>
             <button class="modal-close" onclick="closeModal()">Cancel</button>
         </div>
     </div>
@@ -647,7 +590,7 @@
             }
 
             const handler = PaystackPop.setup({
-                key: 'pk_live_18794be9809d543f92489b74092f937800df5aa8',
+                key: 'pk_test_ab6a57e4c8fd4dfc8073528b6ac4e88833001c11',
                 email: email,
                 amount: selectedAmount * 100,
                 currency: 'NGN',
@@ -667,7 +610,6 @@
                     ]
                 },
                 callback: function(response) {
-                    // Payment successful
                     localStorage.setItem('mzone_subscribed', 'true');
                     localStorage.setItem('mzone_plan', selectedPlan);
                     localStorage.setItem('mzone_email', email);
@@ -684,7 +626,6 @@
             handler.openIframe();
         }
 
-        // Close modal when clicking outside
         document.getElementById('paymentModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
