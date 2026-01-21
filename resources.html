@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - MZone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: #3a3a5a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .search-box {
+            background: #3a3a5a;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: #888;
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .category-btn {
+            background: #3a3a5a;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resources-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .resource-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            transition: transform 0.2s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .resource-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .resource-icon.pdf { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .resource-icon.doc { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .resource-icon.video { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .resource-icon.template { background: linear-gradient(135deg, #10b981, #059669); }
+        .resource-icon.tool { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        .resource-info {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .resource-desc {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .resource-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .featured-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .featured-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .featured-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .featured-desc {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .featured-btn {
+            background: #fff;
+            color: #667eea;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="dashboard.html" class="back-btn">← Back</a>
+        <h1>📚 Resources</h1>
+    </div>
+
+    <!-- Search -->
+    <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search resources...">
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Resources</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Templates</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Tools</div>
+        </div>
+    </div>
+
+    <!-- Featured -->
+    <div class="featured-section">
+        <span class="featured-badge">⭐ Featured</span>
+        <div class="featured-title">Ultimate Business Starter Kit</div>
+        <div class="featured-desc">Everything you need to launch and grow your online business. Includes templates, guides, and tools.</div>
+        <button class="featured-btn" onclick="alert('Downloading...')">
+            📥 Download Now
+        </button>
+    </div>
+
+    <!-- Categories -->
+    <div class="categories">
+        <button class="category-btn active">All</button>
+        <button class="category-btn">📄 PDFs</button>
+        <button class="category-btn">📝 Templates</button>
+        <button class="category-btn">🎥 Videos</button>
+        <button class="category-btn">🛠️ Tools</button>
+    </div>
+
+    <!-- Resources Grid -->
+    <h2 class="section-title">📄 Documents & Guides</h2>
+    <div class="resources-grid">
+        <div class="resource-card">
+            <div class="resource-icon pdf">📄</div>
+            <div class="resource-info">
+                <div class="resource-title">Digital Marketing Guide 2025</div>
+                <div class="resource-desc">Complete guide to mastering digital marketing strategies.</div>
+                <div class="resource-meta">
+                    <span>📄 PDF</span>
+                    <span>2.5 MB</span>
+                    <button class="download-btn" onclick="alert('Downloading PDF...')">📥 Download</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon pdf">📄</div>
+            <div class="resource-info">
+                <div class="resource-title">SEO Checklist</div>
+                <div class="resource-desc">Step-by-step checklist for optimizing your website.</div>
+                <div class="resource-meta">
+                    <span>📄 PDF</span>
+                    <span>500 KB</span>
+                    <button class="download-btn" onclick="alert('Downloading PDF...')">📥 Download</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon doc">📝</div>
+            <div class="resource-info">
+                <div class="resource-title">Business Plan Template</div>
+                <div class="resource-desc">Professional business plan template for startups.</div>
+                <div class="resource-meta">
+                    <span>📝 DOCX</span>
+                    <span>1.2 MB</span>
+                    <button class="download-btn" onclick="alert('Downloading Document...')">📥 Download</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">📝 Templates</h2>
+    <div class="resources-grid">
+        <div class="resource-card">
+            <div class="resource-icon template">📊</div>
+            <div class="resource-info">
+                <div class="resource-title">Social Media Calendar</div>
+                <div class="resource-desc">Plan your content with this 30-day social media template.</div>
+                <div class="resource-meta">
+                    <span>📊 Excel</span>
+                    <span>800 KB</span>
+                    <button class="download-btn" onclick="alert('Downloading Template...')">📥 Download</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon template">📧</div>
+            <div class="resource-info">
+                <div class="resource-title">Email Templates Pack</div>
+                <div class="resource-desc">50+ professional email templates for any occasion.</div>
+                <div class="resource-meta">
+                    <span>📄 PDF</span>
+                    <span>3.1 MB</span>
+                    <button class="download-btn" onclick="alert('Downloading Templates...')">📥 Download</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon template">🎨</div>
+            <div class="resource-info">
+                <div class="resource-title">Canva Design Templates</div>
+                <div class="resource-desc">Ready-to-use social media graphics and banners.</div>
+                <div class="resource-meta">
+                    <span>🔗 Link</span>
+                    <span>25 designs</span>
+                    <button class="download-btn" onclick="alert('Opening Canva...')">🔗 Access</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">🛠️ Tools & Software</h2>
+    <div class="resources-grid">
+        <div class="resource-card">
+            <div class="resource-icon tool">🔧</div>
+            <div class="resource-info">
+                <div class="resource-title">Keyword Research Tool</div>
+                <div class="resource-desc">Find profitable keywords for your content strategy.</div>
+                <div class="resource-meta">
+                    <span>🛠️ Tool</span>
+                    <span>Online</span>
+                    <button class="download-btn" onclick="alert('Opening Tool...')">🚀 Launch</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon tool">📈</div>
+            <div class="resource-info">
+                <div class="resource-title">ROI Calculator</div>
+                <div class="resource-desc">Calculate your marketing return on investment.</div>
+                <div class="resource-meta">
+                    <span>🛠️ Tool</span>
+                    <span>Online</span>
+                    <button class="download-btn" onclick="alert('Opening Calculator...')">🚀 Launch</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Category filter
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
