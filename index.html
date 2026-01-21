@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MZone - Premium Membership</title>
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     
     <!-- Prevent Caching -->
@@ -12,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <!-- Paystack Script -->
+    <!-- Paystack -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
     
     <style>
@@ -74,17 +73,9 @@
             cursor: pointer;
             width: 100%;
             margin-top: 15px;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-        }
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
         
         .btn-secondary {
             background: transparent;
@@ -97,19 +88,14 @@
             cursor: pointer;
             width: 100%;
             margin-top: 12px;
-            transition: background 0.2s, color 0.2s;
         }
-        .btn-secondary:hover {
-            background: #6366f1;
-            color: white;
-        }
+        .btn-secondary:hover { background: #6366f1; color: white; }
         
         .divider {
             display: flex;
             align-items: center;
             margin: 20px 0;
             color: #999;
-            font-size: 0.9rem;
         }
         .divider::before, .divider::after {
             content: '';
@@ -119,7 +105,7 @@
         }
         .divider span { padding: 0 15px; }
         
-        /* Modal Styles */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -154,9 +140,7 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: #666;
-            transition: color 0.2s;
         }
-        .close-btn:hover { color: #333; }
         
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label {
@@ -171,7 +155,6 @@
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 1rem;
-            transition: border-color 0.2s;
         }
         .form-group input:focus {
             outline: none;
@@ -189,16 +172,9 @@
             cursor: pointer;
             width: 100%;
             margin-top: 10px;
-            transition: opacity 0.2s;
         }
-        .modal-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .modal-btn.green {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
+        .modal-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .modal-btn.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         
         .switch-text {
             margin-top: 20px;
@@ -228,21 +204,9 @@
             display: none;
         }
         .msg-box.show { display: block; }
-        .msg-box.error {
-            background: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-        .msg-box.success {
-            background: #d1fae5;
-            color: #059669;
-            border: 1px solid #a7f3d0;
-        }
-        .msg-box.warning {
-            background: #fef3c7;
-            color: #d97706;
-            border: 1px solid #fde68a;
-        }
+        .msg-box.error { background: #fee2e2; color: #dc2626; }
+        .msg-box.success { background: #d1fae5; color: #059669; }
+        .msg-box.warning { background: #fef3c7; color: #d97706; }
         
         /* Telegram Warning */
         .telegram-warning {
@@ -310,18 +274,6 @@
         }
         .steps h4 { color: #1a1a2e; font-size: 0.9rem; margin-bottom: 12px; }
         .steps ol { padding-left: 20px; color: #666; font-size: 0.85rem; line-height: 1.8; }
-        .steps strong { color: #1a1a2e; }
-        
-        /* Password strength indicator */
-        .password-strength {
-            height: 4px;
-            border-radius: 2px;
-            margin-top: 8px;
-            transition: all 0.3s;
-        }
-        .password-strength.weak { background: #ef4444; width: 33%; }
-        .password-strength.medium { background: #f59e0b; width: 66%; }
-        .password-strength.strong { background: #10b981; width: 100%; }
     </style>
 </head>
 <body>
@@ -331,13 +283,8 @@
             <div class="warning-icon">🔒</div>
             <h2>Open in Browser</h2>
             <p>For secure payment, please open this page in Chrome or Safari.</p>
-            
-            <a href="https://tgzoro12.github.io/mzone/?v=2001" target="_blank" class="open-browser-btn">
-                Open in Browser 🌐
-            </a>
-            
-            <button class="copy-btn" onclick="MZone.copyLink()">📋 Copy Link</button>
-            
+            <a href="https://tgzoro12.github.io/mzone/?v=3001" target="_blank" class="open-browser-btn">Open in Browser 🌐</a>
+            <button class="copy-btn" onclick="copyLink()">📋 Copy Link</button>
             <div class="steps">
                 <h4>📱 Or follow these steps:</h4>
                 <ol>
@@ -365,80 +312,79 @@
             <li>Early Access to New Content</li>
         </ul>
         
-        <button class="btn-primary" onclick="MZone.openSignupModal()">Subscribe Now 🚀</button>
+        <button class="btn-primary" onclick="openSignupModal()">Subscribe Now 🚀</button>
         
         <div class="divider"><span>or</span></div>
         
-        <button class="btn-secondary" onclick="MZone.openLoginModal()">Login to Dashboard</button>
+        <button class="btn-secondary" onclick="openLoginModal()">Login to Dashboard</button>
     </div>
     
     <!-- Signup Modal -->
     <div class="modal" id="signupModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="MZone.closeAllModals()">&times;</span>
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
             <h2>📝 Create Account</h2>
             
             <div class="msg-box" id="signupMsg"></div>
             
-            <form id="signupForm" onsubmit="return MZone.handleSignup(event)">
+            <form id="signupForm" onsubmit="return handleSignup(event)">
                 <div class="form-group">
-                    <label for="signupName">Full Name</label>
-                    <input type="text" id="signupName" placeholder="Enter your full name" required autocomplete="name">
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="signupEmail">Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email" required autocomplete="email">
+                    <label>Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="signupPassword">Create Password</label>
-                    <input type="password" id="signupPassword" placeholder="Min 8 characters" required minlength="8" autocomplete="new-password" oninput="MZone.checkPasswordStrength(this.value)">
-                    <div class="password-strength" id="passwordStrength"></div>
+                    <label>Create Password</label>
+                    <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
                 </div>
                 
                 <div class="form-group">
-                    <label for="signupConfirm">Confirm Password</label>
-                    <input type="password" id="signupConfirm" placeholder="Confirm your password" required autocomplete="new-password">
+                    <label>Confirm Password</label>
+                    <input type="password" id="signupConfirm" placeholder="Confirm password" required>
                 </div>
                 
                 <button type="submit" class="modal-btn" id="signupBtn">Create Account</button>
             </form>
             
-            <p class="switch-text">Already have an account? <a onclick="MZone.switchToLogin()">Login here</a></p>
+            <p class="switch-text">Already have an account? <a onclick="switchToLogin()">Login here</a></p>
         </div>
     </div>
     
     <!-- Login Modal -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="MZone.closeAllModals()">&times;</span>
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
             <h2>🔐 Login</h2>
             
             <div class="msg-box" id="loginMsg"></div>
             
-            <form id="loginForm" onsubmit="return MZone.handleLogin(event)">
+            <form id="loginForm" onsubmit="return handleLogin(event)">
                 <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email" required autocomplete="email">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
                 </div>
                 
                 <button type="submit" class="modal-btn" id="loginBtn">Login</button>
             </form>
             
-            <p class="switch-text">Don't have an account? <a onclick="MZone.switchToSignup()">Subscribe now</a></p>
+            <p class="switch-text">Don't have an account? <a onclick="switchToSignup()">Subscribe now</a></p>
         </div>
     </div>
     
     <!-- Payment Modal -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="MZone.closeAllModals()">&times;</span>
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
             <h2>💳 Complete Payment</h2>
             
             <div class="msg-box" id="paymentMsg"></div>
@@ -462,340 +408,89 @@
                 </p>
             </div>
             
-            <button class="modal-btn green" id="payNowBtn" onclick="MZone.processPayment()">Pay ₦16,000 Now</button>
+            <button class="modal-btn green" id="payNowBtn" onclick="processPayment()">Pay ₦16,000 Now</button>
             
             <p class="secure-text">🔒 Secured by Paystack</p>
         </div>
     </div>
 
     <script>
-    // ============================================================
-    // MZONE SECURE AUTHENTICATION SYSTEM v2.0
-    // ============================================================
-    // Security Features:
-    // - HMAC-based data integrity verification
-    // - Encrypted password storage (SHA-256)
-    // - Session tokens with expiry
-    // - Anti-tampering protection
-    // - Rate limiting on login attempts
-    // - Secure admin access
-    // ============================================================
-
-    const MZone = (function() {
-        'use strict';
-        
         // ===== CONFIGURATION =====
-        const CONFIG = {
-            VERSION: '2001',
+        var CONFIG = {
+            VERSION: '3001',
             SITE_URL: 'https://tgzoro12.github.io/mzone/',
             PAYSTACK_KEY: 'pk_live_18794be9809d543f92489b74092f937800df5aa8',
             SUBSCRIPTION_DAYS: 30,
-            SUBSCRIPTION_AMOUNT: 1600000, // kobo
-            MAX_LOGIN_ATTEMPTS: 5,
-            LOCKOUT_DURATION: 15 * 60 * 1000, // 15 minutes
-            SESSION_DURATION: 24 * 60 * 60 * 1000, // 24 hours
-            // Secret key for HMAC (in production, this should be unique per installation)
-            SECRET_KEY: 'MZ_' + btoa(navigator.userAgent.slice(0, 20) + screen.width)
+            AMOUNT: 1600000
         };
         
-        // Admin hash (pre-computed SHA-256 of admin credentials)
-        // To generate: await hashPassword('your-email:your-password')
-        // Current: admin@mzone.com:MZone@SecureAdmin2025!
-        const ADMIN_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
+        // ===== ADMIN CREDENTIALS (CHANGE THESE!) =====
+        var ADMIN_EMAIL = 'admin@mzone.com';
+        var ADMIN_PASSWORD = 'MZone@2025Admin';
         
-        // ===== CRYPTO UTILITIES =====
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password + CONFIG.SECRET_KEY);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        // ===== STORAGE KEY =====
+        var STORAGE_KEY = 'mzone_data_v3';
+        
+        // ===== GET/SAVE DATA =====
+        function getData() {
+            try {
+                var data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : { users: {}, currentUser: null };
+            } catch (e) {
+                return { users: {}, currentUser: null };
+            }
         }
         
-        function generateToken() {
-            const array = new Uint8Array(32);
-            crypto.getRandomValues(array);
-            return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
-        
-        function generateHMAC(data) {
-            // Simple HMAC for data integrity (not cryptographically secure but prevents casual tampering)
-            const str = JSON.stringify(data) + CONFIG.SECRET_KEY;
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-            return Math.abs(hash).toString(16);
-        }
-        
-        // ===== SECURE STORAGE =====
-        const SecureStorage = {
-            setItem(key, value) {
-                const data = {
-                    value: value,
-                    timestamp: Date.now(),
-                    hmac: generateHMAC({ value, key })
-                };
-                localStorage.setItem('mz_' + key, JSON.stringify(data));
-            },
-            
-            getItem(key) {
-                try {
-                    const raw = localStorage.getItem('mz_' + key);
-                    if (!raw) return null;
-                    
-                    const data = JSON.parse(raw);
-                    const expectedHMAC = generateHMAC({ value: data.value, key });
-                    
-                    // Verify integrity
-                    if (data.hmac !== expectedHMAC) {
-                        console.warn('Data integrity check failed for:', key);
-                        this.removeItem(key);
-                        return null;
-                    }
-                    
-                    return data.value;
-                } catch (e) {
-                    return null;
-                }
-            },
-            
-            removeItem(key) {
-                localStorage.removeItem('mz_' + key);
-            },
-            
-            clear() {
-                Object.keys(localStorage)
-                    .filter(k => k.startsWith('mz_'))
-                    .forEach(k => localStorage.removeItem(k));
-            }
-        };
-        
-        // ===== USER DATABASE =====
-        const UserDB = {
-            getAll() {
-                return SecureStorage.getItem('users') || {};
-            },
-            
-            save(users) {
-                SecureStorage.setItem('users', users);
-            },
-            
-            get(email) {
-                const users = this.getAll();
-                return users[email.toLowerCase()] || null;
-            },
-            
-            async create(name, email, password) {
-                const users = this.getAll();
-                email = email.toLowerCase();
-                
-                if (users[email]) {
-                    return { success: false, error: 'Email already registered' };
-                }
-                
-                const hashedPassword = await hashPassword(password);
-                
-                users[email] = {
-                    name: name,
-                    email: email,
-                    passwordHash: hashedPassword,
-                    subscribed: false,
-                    subscriptionExpiry: null,
-                    paymentReference: null,
-                    createdAt: Date.now(),
-                    lastLogin: null
-                };
-                
-                this.save(users);
-                return { success: true, user: users[email] };
-            },
-            
-            update(email, updates) {
-                const users = this.getAll();
-                email = email.toLowerCase();
-                
-                if (!users[email]) return false;
-                
-                users[email] = { ...users[email], ...updates };
-                this.save(users);
-                return true;
-            }
-        };
-        
-        // ===== SESSION MANAGEMENT =====
-        const Session = {
-            create(email, isAdmin = false) {
-                const token = generateToken();
-                const session = {
-                    email: email,
-                    token: token,
-                    isAdmin: isAdmin,
-                    createdAt: Date.now(),
-                    expiresAt: Date.now() + CONFIG.SESSION_DURATION
-                };
-                
-                SecureStorage.setItem('session', session);
-                sessionStorage.setItem('mz_active', 'true');
-                return session;
-            },
-            
-            get() {
-                const session = SecureStorage.getItem('session');
-                
-                if (!session) return null;
-                
-                // Check if session expired
-                if (Date.now() > session.expiresAt) {
-                    this.destroy();
-                    return null;
-                }
-                
-                // Check if session is active in this tab
-                if (sessionStorage.getItem('mz_active') !== 'true') {
-                    return null;
-                }
-                
-                return session;
-            },
-            
-            destroy() {
-                SecureStorage.removeItem('session');
-                sessionStorage.removeItem('mz_active');
-            },
-            
-            isValid() {
-                const session = this.get();
-                if (!session) return false;
-                
-                // Admin sessions are always valid
-                if (session.isAdmin) return true;
-                
-                // Check subscription for regular users
-                const user = UserDB.get(session.email);
-                if (!user) return false;
-                
-                return user.subscribed && user.subscriptionExpiry > Date.now();
-            }
-        };
-        
-        // ===== RATE LIMITING =====
-        const RateLimiter = {
-            getAttempts(email) {
-                const key = 'attempts_' + email.toLowerCase();
-                return SecureStorage.getItem(key) || { count: 0, lockedUntil: null };
-            },
-            
-            recordAttempt(email) {
-                const key = 'attempts_' + email.toLowerCase();
-                const attempts = this.getAttempts(email);
-                
-                attempts.count++;
-                attempts.lastAttempt = Date.now();
-                
-                if (attempts.count >= CONFIG.MAX_LOGIN_ATTEMPTS) {
-                    attempts.lockedUntil = Date.now() + CONFIG.LOCKOUT_DURATION;
-                }
-                
-                SecureStorage.setItem(key, attempts);
-                return attempts;
-            },
-            
-            resetAttempts(email) {
-                const key = 'attempts_' + email.toLowerCase();
-                SecureStorage.removeItem(key);
-            },
-            
-            isLocked(email) {
-                const attempts = this.getAttempts(email);
-                
-                if (attempts.lockedUntil && Date.now() < attempts.lockedUntil) {
-                    const remaining = Math.ceil((attempts.lockedUntil - Date.now()) / 60000);
-                    return { locked: true, minutes: remaining };
-                }
-                
-                // Reset if lockout expired
-                if (attempts.lockedUntil && Date.now() >= attempts.lockedUntil) {
-                    this.resetAttempts(email);
-                }
-                
-                return { locked: false };
-            }
-        };
         
         // ===== WEBVIEW DETECTION =====
         function isInAppBrowser() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            const patterns = [
-                /Telegram/i, /Instagram/i, /FBAN|FBAV|FB_IAB/i,
-                /Twitter/i, /Snapchat/i, /BytedanceWebview|TikTok/i,
-                /wv|WebView/i, /Line/i, /WhatsApp/i
-            ];
-            
-            if (patterns.some(p => p.test(ua))) return true;
+            var ua = navigator.userAgent || '';
+            if (/Telegram|Instagram|FBAN|FBAV|Twitter|Snapchat|TikTok|wv|WebView/i.test(ua)) return true;
             if (/Android/.test(ua) && /Version\/[\d.]+/.test(ua) && !/Chrome/.test(ua)) return true;
-            
             return false;
         }
         
-        // ===== UI HELPERS =====
-        function showMessage(elementId, message, type = 'error') {
-            const el = document.getElementById(elementId);
-            if (!el) return;
-            
-            el.textContent = message;
-            el.className = 'msg-box show ' + type;
-            
-            // Auto-hide success messages
-            if (type === 'success') {
-                setTimeout(() => {
-                    el.classList.remove('show');
-                }, 3000);
+        // ===== INIT =====
+        window.onload = function() {
+            if (isInAppBrowser()) {
+                document.getElementById('telegramWarning').classList.add('show');
+                document.getElementById('mainContent').style.display = 'none';
+                return;
             }
-        }
-        
-        function hideMessage(elementId) {
-            const el = document.getElementById(elementId);
-            if (el) el.classList.remove('show');
-        }
-        
-        function setButtonLoading(buttonId, loading, originalText) {
-            const btn = document.getElementById(buttonId);
-            if (!btn) return;
             
-            btn.disabled = loading;
-            btn.textContent = loading ? 'Processing...' : originalText;
-        }
+            // Check if already logged in with valid subscription
+            var data = getData();
+            if (data.currentUser) {
+                if (data.currentUser === 'admin' || data.isAdmin) {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                var user = data.users[data.currentUser];
+                if (user && user.subscribed && user.expiry > Date.now()) {
+                    window.location.href = 'dashboard.html';
+                }
+            }
+        };
         
-        // ===== PASSWORD STRENGTH =====
-        function checkPasswordStrength(password) {
-            const el = document.getElementById('passwordStrength');
-            if (!el) return;
-            
-            let strength = 0;
-            if (password.length >= 8) strength++;
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-            if (/\d/.test(password)) strength++;
-            if (/[^a-zA-Z0-9]/.test(password)) strength++;
-            
-            el.className = 'password-strength';
-            if (password.length === 0) {
-                el.style.width = '0';
-            } else if (strength < 2) {
-                el.classList.add('weak');
-            } else if (strength < 4) {
-                el.classList.add('medium');
+        // ===== COPY LINK =====
+        function copyLink() {
+            var url = CONFIG.SITE_URL + '?v=' + CONFIG.VERSION;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() {
+                    alert('✅ Link copied! Paste in Chrome or Safari.');
+                });
             } else {
-                el.classList.add('strong');
+                prompt('Copy this link:', url);
             }
         }
         
         // ===== MODALS =====
         function openSignupModal() {
             if (isInAppBrowser()) {
-                alert('⚠️ Please open in Chrome or Safari browser first.');
+                alert('Please open in Chrome or Safari first.');
                 return;
             }
             closeAllModals();
@@ -810,15 +505,17 @@
         function openPaymentModal(email) {
             closeAllModals();
             document.getElementById('paymentEmail').textContent = email;
+            sessionStorage.setItem('pendingPaymentEmail', email);
             document.getElementById('paymentModal').classList.add('active');
-            
-            // Store pending payment email
-            sessionStorage.setItem('mz_pending_payment', email);
         }
         
         function closeAllModals() {
-            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-            ['signupMsg', 'loginMsg', 'paymentMsg'].forEach(hideMessage);
+            document.querySelectorAll('.modal').forEach(function(m) {
+                m.classList.remove('active');
+            });
+            document.querySelectorAll('.msg-box').forEach(function(m) {
+                m.classList.remove('show');
+            });
         }
         
         function switchToLogin() {
@@ -831,305 +528,183 @@
             openSignupModal();
         }
         
-        // ===== SIGNUP HANDLER =====
-        async function handleSignup(event) {
-            event.preventDefault();
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(function(modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) closeAllModals();
+            });
+        });
+        
+        // ===== SHOW MESSAGE =====
+        function showMsg(id, msg, type) {
+            var el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = 'msg-box show ' + type;
+        }
+        
+        // ===== SIGNUP =====
+        function handleSignup(e) {
+            e.preventDefault();
             
-            if (isInAppBrowser()) {
-                showMessage('signupMsg', '⚠️ Please open in Chrome or Safari browser.', 'warning');
+            var name = document.getElementById('signupName').value.trim();
+            var email = document.getElementById('signupEmail').value.trim().toLowerCase();
+            var password = document.getElementById('signupPassword').value;
+            var confirm = document.getElementById('signupConfirm').value;
+            
+            if (!name || !email || !password) {
+                showMsg('signupMsg', 'Please fill all fields', 'error');
                 return false;
             }
             
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-            const password = document.getElementById('signupPassword').value;
-            const confirm = document.getElementById('signupConfirm').value;
-            
-            // Validation
-            if (!name || !email || !password || !confirm) {
-                showMessage('signupMsg', 'Please fill in all fields', 'error');
-                return false;
-            }
-            
-            if (password.length < 8) {
-                showMessage('signupMsg', 'Password must be at least 8 characters', 'error');
+            if (password.length < 6) {
+                showMsg('signupMsg', 'Password must be at least 6 characters', 'error');
                 return false;
             }
             
             if (password !== confirm) {
-                showMessage('signupMsg', 'Passwords do not match', 'error');
+                showMsg('signupMsg', 'Passwords do not match', 'error');
                 return false;
             }
             
-            // Check if email exists
-            if (UserDB.get(email)) {
-                showMessage('signupMsg', 'Email already registered. Please login.', 'error');
+            var data = getData();
+            
+            if (data.users[email]) {
+                showMsg('signupMsg', 'Email already registered. Please login.', 'error');
                 return false;
             }
             
-            setButtonLoading('signupBtn', true, 'Create Account');
+            // Create user (not subscribed yet)
+            data.users[email] = {
+                name: name,
+                email: email,
+                password: password,
+                subscribed: false,
+                expiry: null,
+                createdAt: Date.now()
+            };
             
-            // Create user
-            const result = await UserDB.create(name, email, password);
+            saveData(data);
             
-            if (!result.success) {
-                showMessage('signupMsg', result.error, 'error');
-                setButtonLoading('signupBtn', false, 'Create Account');
-                return false;
-            }
+            showMsg('signupMsg', '✅ Account created! Proceeding to payment...', 'success');
             
-            showMessage('signupMsg', '✅ Account created! Proceeding to payment...', 'success');
-            
-            setTimeout(() => {
-                setButtonLoading('signupBtn', false, 'Create Account');
+            setTimeout(function() {
                 openPaymentModal(email);
             }, 1500);
             
             return false;
         }
         
-        // ===== LOGIN HANDLER =====
-        async function handleLogin(event) {
-            event.preventDefault();
+        // ===== LOGIN =====
+        function handleLogin(e) {
+            e.preventDefault();
             
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            const password = document.getElementById('loginPassword').value;
+            var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            var password = document.getElementById('loginPassword').value;
             
-            // Check rate limiting
-            const lockStatus = RateLimiter.isLocked(email);
-            if (lockStatus.locked) {
-                showMessage('loginMsg', `Too many attempts. Try again in ${lockStatus.minutes} minutes.`, 'error');
-                return false;
-            }
-            
-            setButtonLoading('loginBtn', true, 'Login');
-            
-            // Check for admin login
-            const adminCheck = await hashPassword(email + ':' + password);
-            if (adminCheck === ADMIN_HASH || (email === 'admin@mzone.com' && password === 'MZone@SecureAdmin2025!')) {
-                Session.create('admin', true);
-                showMessage('loginMsg', '✅ Admin login successful!', 'success');
-                setTimeout(() => {
+            // Check admin login
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                var data = getData();
+                data.currentUser = 'admin';
+                data.isAdmin = true;
+                saveData(data);
+                
+                showMsg('loginMsg', '✅ Admin login successful!', 'success');
+                setTimeout(function() {
                     window.location.href = 'dashboard.html';
                 }, 1000);
                 return false;
             }
             
-            // Regular user login
-            const user = UserDB.get(email);
+            var data = getData();
+            var user = data.users[email];
             
             if (!user) {
-                RateLimiter.recordAttempt(email);
-                showMessage('loginMsg', 'Email not found. Please sign up first.', 'error');
-                setButtonLoading('loginBtn', false, 'Login');
+                showMsg('loginMsg', 'Email not found. Please sign up.', 'error');
                 return false;
             }
             
-            // Verify password
-            const hashedPassword = await hashPassword(password);
-            if (user.passwordHash !== hashedPassword) {
-                const attempts = RateLimiter.recordAttempt(email);
-                const remaining = CONFIG.MAX_LOGIN_ATTEMPTS - attempts.count;
-                
-                if (remaining > 0) {
-                    showMessage('loginMsg', `Incorrect password. ${remaining} attempts remaining.`, 'error');
-                } else {
-                    showMessage('loginMsg', 'Account locked. Try again in 15 minutes.', 'error');
-                }
-                
-                setButtonLoading('loginBtn', false, 'Login');
+            if (user.password !== password) {
+                showMsg('loginMsg', 'Incorrect password.', 'error');
                 return false;
             }
-            
-            // Reset rate limiter on successful auth
-            RateLimiter.resetAttempts(email);
-            
-            // Update last login
-            UserDB.update(email, { lastLogin: Date.now() });
             
             // Check subscription
-            if (!user.subscribed || !user.subscriptionExpiry || user.subscriptionExpiry < Date.now()) {
-                showMessage('loginMsg', 'Your subscription has expired or is not active.', 'warning');
-                
-                setTimeout(() => {
-                    if (confirm('Would you like to subscribe/renew now for ₦16,000?')) {
+            if (!user.subscribed || !user.expiry || user.expiry < Date.now()) {
+                showMsg('loginMsg', 'Your subscription is not active.', 'warning');
+                setTimeout(function() {
+                    if (confirm('Subscribe now for ₦16,000?')) {
                         openPaymentModal(email);
                     }
-                    setButtonLoading('loginBtn', false, 'Login');
                 }, 500);
-                
                 return false;
             }
             
-            // Create session
-            Session.create(email, false);
+            // Login successful
+            data.currentUser = email;
+            data.isAdmin = false;
+            saveData(data);
             
-            showMessage('loginMsg', '✅ Login successful! Redirecting...', 'success');
-            
-            setTimeout(() => {
+            showMsg('loginMsg', '✅ Login successful!', 'success');
+            setTimeout(function() {
                 window.location.href = 'dashboard.html';
             }, 1000);
             
             return false;
         }
         
-        // ===== PAYMENT PROCESSING =====
+        // ===== PAYMENT =====
         function processPayment() {
-            if (isInAppBrowser()) {
-                showMessage('paymentMsg', '⚠️ Please open in Chrome or Safari browser.', 'warning');
-                return;
-            }
+            var email = sessionStorage.getItem('pendingPaymentEmail');
             
-            const email = sessionStorage.getItem('mz_pending_payment');
             if (!email) {
-                showMessage('paymentMsg', 'Session expired. Please try again.', 'error');
+                showMsg('paymentMsg', 'Session error. Please try again.', 'error');
                 return;
             }
             
-            const user = UserDB.get(email);
+            var data = getData();
+            var user = data.users[email];
+            
             if (!user) {
-                showMessage('paymentMsg', 'User not found. Please sign up again.', 'error');
+                showMsg('paymentMsg', 'User not found.', 'error');
                 return;
             }
             
-            setButtonLoading('payNowBtn', true, 'Pay ₦16,000 Now');
+            document.getElementById('payNowBtn').disabled = true;
+            document.getElementById('payNowBtn').textContent = 'Processing...';
             
-            const reference = 'MZ_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            const handler = PaystackPop.setup({
+            var handler = PaystackPop.setup({
                 key: CONFIG.PAYSTACK_KEY,
                 email: email,
-                amount: CONFIG.SUBSCRIPTION_AMOUNT,
+                amount: CONFIG.AMOUNT,
                 currency: 'NGN',
-                ref: reference,
-                metadata: {
-                    custom_fields: [
-                        { display_name: "Name", variable_name: "name", value: user.name },
-                        { display_name: "Plan", variable_name: "plan", value: "Premium Monthly" }
-                    ]
-                },
+                ref: 'MZ_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                 callback: function(response) {
                     // Payment successful
-                    const expiry = Date.now() + (CONFIG.SUBSCRIPTION_DAYS * 24 * 60 * 60 * 1000);
+                    var expiry = Date.now() + (CONFIG.SUBSCRIPTION_DAYS * 24 * 60 * 60 * 1000);
                     
-                    UserDB.update(email, {
-                        subscribed: true,
-                        subscriptionExpiry: expiry,
-                        paymentReference: response.reference,
-                        lastPayment: Date.now()
-                    });
+                    data.users[email].subscribed = true;
+                    data.users[email].expiry = expiry;
+                    data.users[email].paymentRef = response.reference;
+                    data.currentUser = email;
+                    data.isAdmin = false;
                     
-                    // Create session
-                    Session.create(email, false);
+                    saveData(data);
+                    sessionStorage.removeItem('pendingPaymentEmail');
                     
-                    // Clear pending payment
-                    sessionStorage.removeItem('mz_pending_payment');
-                    
-                    showMessage('paymentMsg', '✅ Payment successful! Redirecting...', 'success');
-                    
-                    setTimeout(() => {
+                    showMsg('paymentMsg', '✅ Payment successful!', 'success');
+                    setTimeout(function() {
                         window.location.href = 'dashboard.html?welcome=true';
                     }, 1500);
                 },
                 onClose: function() {
-                    setButtonLoading('payNowBtn', false, 'Pay ₦16,000 Now');
-                    showMessage('paymentMsg', 'Payment cancelled. You can try again.', 'warning');
+                    document.getElementById('payNowBtn').disabled = false;
+                    document.getElementById('payNowBtn').textContent = 'Pay ₦16,000 Now';
+                    showMsg('paymentMsg', 'Payment cancelled.', 'warning');
                 }
             });
             
             handler.openIframe();
         }
-        
-        // ===== COPY LINK =====
-        function copyLink() {
-            const url = CONFIG.SITE_URL + '?v=' + CONFIG.VERSION;
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(url).then(() => {
-                    alert('✅ Link copied!\n\nPaste it in Chrome or Safari.');
-                }).catch(() => {
-                    fallbackCopy(url);
-                });
-            } else {
-                fallbackCopy(url);
-            }
-        }
-        
-        function fallbackCopy(text) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                alert('✅ Link copied!\n\nPaste it in Chrome or Safari.');
-            } catch (e) {
-                alert('Please copy this link:\n\n' + text);
-            }
-            
-            document.body.removeChild(textArea);
-        }
-        
-        // ===== INITIALIZATION =====
-        function init() {
-            // Check for WebView
-            if (isInAppBrowser()) {
-                document.getElementById('telegramWarning').classList.add('show');
-                document.getElementById('mainContent').style.display = 'none';
-                return;
-            }
-            
-            // Check if already logged in with valid session
-            if (Session.isValid()) {
-                window.location.href = 'dashboard.html';
-                return;
-            }
-            
-            // Setup modal close on outside click
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === this) closeAllModals();
-                });
-            });
-            
-            // Prevent form resubmission on refresh
-            if (window.history.replaceState) {
-                window.history.replaceState(null, null, window.location.href);
-            }
-        }
-        
-        // Run on DOM ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-        
-        // ===== PUBLIC API =====
-        return {
-            openSignupModal,
-            openLoginModal,
-            closeAllModals,
-            switchToLogin,
-            switchToSignup,
-            handleSignup,
-            handleLogin,
-            processPayment,
-            copyLink,
-            checkPasswordStrength,
-            
-            // For debugging (remove in production)
-            _debug: {
-                Session,
-                UserDB,
-                SecureStorage,
-                CONFIG
-            }
-        };
-    })();
     </script>
 </body>
 </html>
