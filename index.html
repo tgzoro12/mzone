@@ -3,620 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MZone - Premium Membership</title>
+    <title>MZone | Premium Access</title>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: #fff;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; min-height: 100vh; }
         
-        .navbar {
-            background: rgba(30, 41, 59, 0.95);
-            padding: 16px 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-        .navbar .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #f8fafc;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #6366f1, #10b981);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        .nav-btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            padding: 10px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        .nav-btn:hover { transform: scale(1.05); }
-
-        .hero {
-            padding: 120px 20px 60px;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .hero-badge {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin-bottom: 24px;
-        }
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-        .hero h1 span {
-            background: linear-gradient(135deg, #6366f1, #10b981);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero p {
-            font-size: 1.1rem;
-            color: #94a3b8;
-            margin-bottom: 32px;
-            line-height: 1.6;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 40px 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .feature-card {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: #6366f1;
-        }
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-        }
-        .feature-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-        .feature-card p {
-            font-size: 0.9rem;
-            color: #94a3b8;
-        }
-
-        .pricing {
-            padding: 60px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .pricing h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 40px;
-        }
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-        .pricing-card {
-            background: rgba(30, 41, 59, 0.8);
-            border: 2px solid rgba(99, 102, 241, 0.2);
-            border-radius: 20px;
-            padding: 32px;
-            text-align: center;
-            position: relative;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .pricing-card:hover {
-            transform: translateY(-5px);
-        }
-        .pricing-card.popular {
-            border-color: #6366f1;
-            transform: scale(1.02);
-        }
-        .popular-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            padding: 6px 20px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .pricing-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-        .pricing-card .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 16px 0;
-        }
-        .pricing-card .price span {
-            font-size: 1rem;
-            color: #94a3b8;
-            font-weight: normal;
-        }
-        .pricing-card ul {
-            list-style: none;
-            margin: 24px 0;
-            text-align: left;
-        }
-        .pricing-card ul li {
-            padding: 10px 0;
-            color: #cbd5e1;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .pricing-card ul li::before {
-            content: "✓";
-            color: #10b981;
-            font-weight: bold;
-        }
-        .pricing-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .pricing-btn:hover {
-            transform: scale(1.02);
-        }
-        .pricing-btn.primary {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-        }
-        .pricing-btn.secondary {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-        }
-
-        .testimonials {
-            padding: 60px 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .testimonials h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 40px;
-        }
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .testimonial-card {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 16px;
-            padding: 24px;
-        }
-        .testimonial-card p {
-            color: #cbd5e1;
-            font-style: italic;
-            margin-bottom: 16px;
-            line-height: 1.6;
-        }
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .testimonial-avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #6366f1, #10b981);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .testimonial-name {
-            font-weight: 600;
-        }
-        .testimonial-role {
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
-
-        .cta {
-            padding: 80px 20px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(16, 185, 129, 0.1));
-        }
-        .cta h2 {
-            font-size: 2rem;
-            margin-bottom: 16px;
-        }
-        .cta p {
-            color: #94a3b8;
-            margin-bottom: 32px;
-            font-size: 1.1rem;
-        }
-        .cta-btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            padding: 16px 48px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .cta-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .footer {
-            padding: 40px 20px;
-            text-align: center;
-            border-top: 1px solid rgba(99, 102, 241, 0.2);
-        }
-        .footer p {
-            color: #64748b;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-        .modal.show {
-            display: flex;
-        }
-        .modal-content {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 32px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        .modal-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-        .modal-content .price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #6366f1;
-            margin-bottom: 24px;
-        }
-        .form-group {
-            margin-bottom: 16px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            background: #0f172a;
-            color: #fff;
-            font-size: 1rem;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-        .modal-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 16px;
-        }
-        .modal-close {
-            background: none;
-            border: none;
-            color: #64748b;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-top: 16px;
-        }
+        .navbar { background: #1e293b; padding: 16px 20px; position: fixed; width: 100%; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: #f8fafc; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1, #10b981); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .nav-btn { background: transparent; border: 2px solid #6366f1; color: #6366f1; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; }
+        
+        .hero { padding: 120px 20px 60px; text-align: center; }
+        .badge { background: rgba(99,102,241,0.2); border: 1px solid #6366f1; padding: 8px 16px; border-radius: 50px; font-size: 0.875rem; color: #818cf8; display: inline-block; margin-bottom: 24px; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 16px; line-height: 1.2; }
+        .hero p { color: #94a3b8; font-size: 1rem; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #10b981); color: white; border: none; padding: 16px 32px; font-size: 1.1rem; border-radius: 12px; cursor: pointer; font-weight: 600; }
+        .btn-block { width: 100%; }
+        
+        .features { padding: 60px 20px; background: #1e293b; }
+        .section-title { text-align: center; font-size: 1.8rem; margin-bottom: 40px; }
+        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 600px; margin: 0 auto; }
+        .feature-card { background: #0f172a; padding: 24px; border-radius: 12px; text-align: center; }
+        .feature-icon { font-size: 2rem; margin-bottom: 12px; }
+        .feature-card h3 { font-size: 1rem; margin-bottom: 8px; }
+        .feature-card p { color: #94a3b8; font-size: 0.875rem; }
+        
+        .pricing { padding: 60px 20px; text-align: center; }
+        .pricing-card { background: #1e293b; max-width: 350px; margin: 0 auto; border-radius: 16px; padding: 32px; border: 2px solid #6366f1; }
+        .price { font-size: 2.5rem; font-weight: 800; color: #6366f1; margin: 20px 0; }
+        .price span { font-size: 1rem; color: #94a3b8; }
+        .pricing-features { list-style: none; text-align: left; margin: 20px 0; }
+        .pricing-features li { padding: 10px 0; border-bottom: 1px solid #334155; color: #94a3b8; font-size: 0.9rem; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1e293b; padding: 32px; border-radius: 16px; width: 100%; max-width: 380px; position: relative; }
+        .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.8rem; cursor: pointer; color: #94a3b8; }
+        .modal-content h2 { margin-bottom: 8px; font-size: 1.4rem; }
+        .modal-content > p { color: #94a3b8; margin-bottom: 20px; font-size: 0.9rem; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #f8fafc; font-size: 1rem; }
+        .form-group input:focus { outline: none; border-color: #6366f1; }
+        .modal-secure { text-align: center; margin-top: 12px; color: #64748b; font-size: 0.8rem; }
+        
+        .footer { background: #1e293b; padding: 30px 20px; text-align: center; margin-top: 60px; }
+        .footer p { color: #64748b; font-size: 0.875rem; }
+        
+        .admin-link { position: fixed; bottom: 10px; right: 10px; font-size: 0.7rem; color: #334155; text-decoration: none; }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
-        <div class="container">
-            <a href="#" class="logo">
-                <span class="logo-icon">M</span>
-                MZone
-            </a>
-            <a href="dashboard.html?status=success" class="nav-btn">Dashboard</a>
-        </div>
+        <a href="index.html" class="logo">
+            <span class="logo-icon">M</span>
+            MZone
+        </a>
+        <a href="dashboard.html?admin=mzone2024" class="nav-btn">Dashboard</a>
     </nav>
 
-    <!-- Hero -->
-    <section class="hero">
-        <span class="hero-badge">🚀 Premium Membership Platform</span>
-        <h1>Unlock Your Full <span>Potential</span> Today</h1>
-        <p>Get access to premium tools, exclusive content, and a community of successful entrepreneurs. Start your journey to success now.</p>
-    </section>
+    <header class="hero">
+        <span class="badge">🚀 Premium Access</span>
+        <h1>Unlock Premium Tools & Resources</h1>
+        <p>Get instant access to exclusive tools, downloads, and resources that boost your productivity.</p>
+        <button class="btn-primary" onclick="openModal()">Subscribe Now — ₦16,000/month</button>
+    </header>
 
-    <!-- Features -->
     <section class="features">
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Analytics Dashboard</h3>
-            <p>Track your progress with detailed analytics and insights</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <h3>AI Content Tools</h3>
-            <p>Generate content, captions, and copy with AI assistance</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🔍</div>
-            <h3>SEO Optimizer</h3>
-            <p>Analyze and improve your website's search ranking</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">💰</div>
-            <h3>Budget Tracker</h3>
-            <p>Manage your finances and track expenses easily</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <h3>Resource Library</h3>
-            <p>Access templates, guides, and premium downloads</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎓</div>
-            <h3>Video Tutorials</h3>
-            <p>Learn from expert-led courses and tutorials</p>
-        </div>
-    </section>
-
-    <!-- Pricing -->
-    <section class="pricing" id="pricing">
-        <h2>Choose Your Plan</h2>
-        <div class="pricing-grid">
-            <!-- Basic Plan -->
-            <div class="pricing-card">
-                <h3>Basic</h3>
-                <div class="price">₦5,000<span>/month</span></div>
-                <ul>
-                    <li>Access to Dashboard</li>
-                    <li>Basic Analytics</li>
-                    <li>5 AI Content generations/day</li>
-                    <li>Email Support</li>
-                    <li>Resource Downloads</li>
-                </ul>
-                <button class="pricing-btn secondary" onclick="openPayment('Basic', 5000)">Get Started</button>
+        <h2 class="section-title">What You Get</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Analytics</h3>
+                <p>Track your progress</p>
             </div>
-
-            <!-- Pro Plan -->
-            <div class="pricing-card popular">
-                <span class="popular-badge">⭐ Most Popular</span>
-                <h3>Pro</h3>
-                <div class="price">₦15,000<span>/month</span></div>
-                <ul>
-                    <li>Everything in Basic</li>
-                    <li>Advanced Analytics</li>
-                    <li>Unlimited AI Content</li>
-                    <li>Priority Support</li>
-                    <li>All Pro Tools Access</li>
-                    <li>Private Telegram Group</li>
-                </ul>
-                <button class="pricing-btn primary" onclick="openPayment('Pro', 15000)">Get Started</button>
+            <div class="feature-card">
+                <div class="feature-icon">⬇️</div>
+                <h3>Downloads</h3>
+                <p>Premium resources</p>
             </div>
-
-            <!-- VIP Plan -->
-            <div class="pricing-card">
-                <h3>VIP</h3>
-                <div class="price">₦30,000<span>/month</span></div>
-                <ul>
-                    <li>Everything in Pro</li>
-                    <li>1-on-1 Coaching Call</li>
-                    <li>Custom Tools Setup</li>
-                    <li>VIP Telegram Group</li>
-                    <li>Early Access to Features</li>
-                    <li>Lifetime Updates</li>
-                </ul>
-                <button class="pricing-btn secondary" onclick="openPayment('VIP', 30000)">Get Started</button>
+            <div class="feature-card">
+                <div class="feature-icon">🛠️</div>
+                <h3>Pro Tools</h3>
+                <p>Professional tools</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Support</h3>
+                <p>24hr assistance</p>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials -->
-    <section class="testimonials">
-        <h2>What Our Members Say</h2>
-        <div class="testimonial-grid">
-            <div class="testimonial-card">
-                <p>"MZone has completely transformed how I run my business. The tools are incredible!"</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">A</div>
-                    <div>
-                        <div class="testimonial-name">Adebayo Johnson</div>
-                        <div class="testimonial-role">Entrepreneur</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <p>"I made back my subscription fee in the first week! The AI content tools are amazing."</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">C</div>
-                    <div>
-                        <div class="testimonial-name">Chioma Okafor</div>
-                        <div class="testimonial-role">Content Creator</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <p>"Best investment I've made this year. Highly recommended!"</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">E</div>
-                    <div>
-                        <div class="testimonial-name">Emmanuel Nwosu</div>
-                        <div class="testimonial-role">Digital Marketer</div>
-                    </div>
-                </div>
-            </div>
+    <section class="pricing">
+        <h2 class="section-title">Simple Pricing</h2>
+        <div class="pricing-card">
+            <h3>Premium Access</h3>
+            <div class="price">₦16,000<span>/month</span></div>
+            <ul class="pricing-features">
+                <li>✓ Full analytics dashboard</li>
+                <li>✓ Unlimited downloads</li>
+                <li>✓ All premium tools</li>
+                <li>✓ Priority support</li>
+                <li>✓ Cancel anytime</li>
+            </ul>
+            <button class="btn-primary btn-block" onclick="openModal()">Get Started Now</button>
         </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta">
-        <h2>Ready to Transform Your Life?</h2>
-        <p>Join thousands of successful members today</p>
-        <button class="cta-btn" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">Get Started Now</button>
-    </section>
-
-    <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 MZone. All rights reserved.</p>
+        <p>© 2024 MZone. All rights reserved.</p>
     </footer>
 
-    <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
+    <a href="dashboard.html?admin=mzone2024" class="admin-link">⚙️</a>
+
+    <div id="paymentModal" class="modal">
         <div class="modal-content">
-            <h3 id="modalPlan">Pro Plan</h3>
-            <div class="price" id="modalPrice">₦15,000/month</div>
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="customerName" placeholder="Enter your name" required>
-            </div>
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="customerEmail" placeholder="Enter your email" required>
-            </div>
-            <button class="modal-btn" onclick="payWithPaystack()">Pay Now</button>
-            <button class="modal-close" onclick="closeModal()">Cancel</button>
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2>Complete Subscription</h2>
+            <p>Enter your details to continue</p>
+            <form id="paymentForm" onsubmit="payNow(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" placeholder="Your full name" required>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Pay ₦16,000 with Paystack</button>
+            </form>
+            <p class="modal-secure">🔒 Secured by Paystack</p>
         </div>
     </div>
 
-    <!-- Paystack Script -->
-    <script src="https://js.paystack.co/v1/inline.js"></script>
     <script>
-        let selectedPlan = '';
-        let selectedAmount = 0;
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
 
-        function openPayment(plan, amount) {
-            selectedPlan = plan;
-            selectedAmount = amount;
-            document.getElementById('modalPlan').textContent = plan + ' Plan';
-            document.getElementById('modalPrice').textContent = '₦' + amount.toLocaleString() + '/month';
-            document.getElementById('paymentModal').classList.add('show');
+        function openModal() {
+            document.getElementById('paymentModal').classList.add('active');
         }
 
         function closeModal() {
-            document.getElementById('paymentModal').classList.remove('show');
+            document.getElementById('paymentModal').classList.remove('active');
         }
 
-        function payWithPaystack() {
-            const name = document.getElementById('customerName').value;
-            const email = document.getElementById('customerEmail').value;
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
 
-            if (!name || !email) {
-                alert('Please enter your name and email');
-                return;
-            }
+        function payNow(e) {
+            e.preventDefault();
+            
+            var email = document.getElementById('email').value;
+            var name = document.getElementById('name').value;
 
-            const handler = PaystackPop.setup({
+            var handler = PaystackPop.setup({
                 key: 'pk_test_ab6a57e4c8fd4dfc8073528b6ac4e88833001c11',
                 email: email,
-                amount: selectedAmount * 100,
+                amount: 1600000,
                 currency: 'NGN',
-                ref: 'MZ-' + Math.floor(Math.random() * 1000000000),
+                ref: 'MZ_' + Date.now(),
                 metadata: {
                     custom_fields: [
-                        {
-                            display_name: "Customer Name",
-                            variable_name: "customer_name",
-                            value: name
-                        },
-                        {
-                            display_name: "Plan",
-                            variable_name: "plan",
-                            value: selectedPlan
-                        }
+                        { display_name: "Name", variable_name: "name", value: name }
                     ]
                 },
                 callback: function(response) {
                     localStorage.setItem('mzone_subscribed', 'true');
-                    localStorage.setItem('mzone_plan', selectedPlan);
-                    localStorage.setItem('mzone_email', email);
-                    localStorage.setItem('mzone_name', name);
-                    
-                    alert('Payment successful! Reference: ' + response.reference);
-                    window.location.href = 'dashboard.html?status=success';
+                    window.location.href = 'dashboard.html?status=success&ref=' + response.reference;
                 },
                 onClose: function() {
                     alert('Payment cancelled');
@@ -625,10 +188,6 @@
 
             handler.openIframe();
         }
-
-        document.getElementById('paymentModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
     </script>
 </body>
 </html>
