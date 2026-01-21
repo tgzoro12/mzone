@@ -1,41 +1,248 @@
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
-
-    function openModal() {
-        document.getElementById('paymentModal').classList.add('active');
-    }
-
-    function closeModal() {
-        document.getElementById('paymentModal').classList.remove('active');
-    }
-
-    document.getElementById('paymentModal').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
-    });
-
-    document.getElementById('paymentForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MZone - Premium Membership</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    
+    <!-- Paystack Script - CRITICAL! -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
         
-        var email = document.getElementById('email').value;
-        var name = document.getElementById('name').value;
-
-        var handler = PaystackPop.setup({
-            key: 'pk_test_ab6a57e4c8fd4dfc8073528b6ac4e88833001c11',
-            email: email,
-            amount: 1600000,
-            currency: 'NGN',
-            ref: 'MZ_' + Date.now(),
-            callback: function(response) {
-                localStorage.setItem('mzone_subscribed', 'true');
-                window.location.href = 'dashboard.html?status=success&ref=' + response.reference;
-            },
-            onClose: function() {
-                alert('Payment cancelled');
-            }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        .logo { font-size: 3rem; margin-bottom: 10px; }
+        
+        h1 { color: #1a1a2e; margin-bottom: 10px; font-size: 2rem; }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #6366f1;
+            margin: 20px 0;
+        }
+        
+        .price span { font-size: 1rem; color: #666; }
+        
+        .features {
+            text-align: left;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .features li {
+            padding: 8px 0;
+            list-style: none;
+            color: #333;
+        }
+        
+        .features li::before { content: "✅ "; }
+        
+        .subscribe-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .modal-content h2 { margin-bottom: 20px; color: #1a1a2e; }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-group { margin-bottom: 15px; text-align: left; }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+        
+        .pay-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .secure-text {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎬</div>
+        <h1>MZone Premium</h1>
+        <p style="color: #666;">Unlimited access to all content</p>
+        
+        <div class="price">₦16,000 <span>/month</span></div>
+        
+        <ul class="features">
+            <li>Unlimited Downloads</li>
+            <li>Premium Content Access</li>
+            <li>24/7 Support</li>
+            <li>No Ads</li>
+            <li>Early Access to New Content</li>
+        </ul>
+        
+        <button class="subscribe-btn" onclick="openModal()">Subscribe Now 🚀</button>
+    </div>
+    
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>💳 Complete Payment</h2>
+            
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                
+                <button type="submit" class="pay-btn" id="payBtn">Pay ₦16,000 Now</button>
+            </form>
+            
+            <p class="secure-text">🔒 Secured by Paystack</p>
+        </div>
+    </div>
+    
+    <script>
+        function openModal() {
+            document.getElementById('paymentModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+        
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
         });
-
-        handler.openIframe();
-    });
-</script
+        
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var email = document.getElementById('email').value.trim();
+            var name = document.getElementById('name').value.trim();
+            var payBtn = document.getElementById('payBtn');
+            
+            if (!email || !name) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            payBtn.disabled = true;
+            payBtn.textContent = 'Processing...';
+            
+            var handler = PaystackPop.setup({
+                key: 'pk_test_ab6a57e4c8fd4dfc8073528b6ac4e88833001c11',
+                email: email,
+                amount: 1600000,
+                currency: 'NGN',
+                ref: 'MZ_' + Date.now(),
+                callback: function(response) {
+                    localStorage.setItem('mzone_subscribed', 'true');
+                    window.location.href = 'dashboard.html?status=success&ref=' + response.reference;
+                },
+                onClose: function() {
+                    payBtn.disabled = false;
+                    payBtn.textContent = 'Pay ₦16,000 Now';
+                    alert('Payment cancelled');
+                }
+            });
+            
+            handler.openIframe();
+        });
+    </script>
+</body>
+</html>
