@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorials - MZone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: #3a3a5a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .progress-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-title {
+            font-size: 16px;
+        }
+
+        .progress-percent {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 10px;
+            width: 35%;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .category-btn {
+            background: #3a3a5a;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .video-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: #3a3a5a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-btn {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(102, 126, 234, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .video-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .video-meta .completed {
+            color: #10b981;
+        }
+
+        .course-card {
+            background: linear-gradient(135deg, #2a2a4a 0%, #1a1a3a 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .course-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .course-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .course-icon.marketing { background: linear-gradient(135deg, #ec4899, #be185d); }
+        .course-icon.seo { background: linear-gradient(135deg, #10b981, #059669); }
+        .course-icon.social { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .course-icon.content { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        .course-info {
+            flex: 1;
+        }
+
+        .course-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .course-desc {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .course-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .course-progress {
+            margin-top: 15px;
+        }
+
+        .course-progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .course-progress-bar {
+            height: 6px;
+            background: #3a3a5a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .course-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        .start-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #fff;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .video-grid {
+            display: grid;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="dashboard.html" class="back-btn">← Back</a>
+        <h1>🎓 Tutorials</h1>
+    </div>
+
+    <!-- Progress Card -->
+    <div class="progress-card">
+        <div class="progress-header">
+            <span class="progress-title">Your Learning Progress</span>
+            <span class="progress-percent">35%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="progress-stats">
+            <span>7 of 20 lessons completed</span>
+            <span>🔥 5 day streak</span>
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="categories">
+        <button class="category-btn active">All</button>
+        <button class="category-btn">🚀 Beginner</button>
+        <button class="category-btn">📈 Marketing</button>
+        <button class="category-btn">🔍 SEO</button>
+        <button class="category-btn">📱 Social</button>
+    </div>
+
+    <!-- Continue Learning -->
+    <h2 class="section-title">▶️ Continue Learning</h2>
+    <div class="video-grid">
+        <div class="video-card">
+            <div class="video-thumbnail" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                <div class="play-btn">▶</div>
+                <span class="video-duration">12:34</span>
+            </div>
+            <div class="video-info">
+                <div class="video-title">How to Create Engaging Content</div>
+                <div class="video-meta">
+                    <span>📚 Module 3</span>
+                    <span>👁️ 2.3k views</span>
+                    <span class="completed">✓ 60% done</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses -->
+    <h2 class="section-title" style="margin-top: 25px;">📚 Courses</h2>
+    
+    <div class="course-card">
+        <div class="course-header">
+            <div class="course-icon marketing">📈</div>
+            <div class="course-info">
+                <div class="course-title">Digital Marketing Mastery</div>
+                <div class="course-desc">Learn to market your business online effectively</div>
+                <div class="course-stats">
+                    <span>🎥 12 lessons</span>
+                    <span>⏱️ 3 hours</span>
+                </div>
+            </div>
+        </div>
+        <div class="course-progress">
+            <div class="course-progress-header">
+                <span>Progress</span>
+                <span>4/12 lessons</span>
+            </div>
+            <div class="course-progress-bar">
+                <div class="course-progress-fill" style="width: 33%;"></div>
+            </div>
+        </div>
+        <button class="start-btn" onclick="alert('Continuing course...')">Continue Course</button>
+    </div>
+
+    <div class="course-card">
+        <div class="course-header">
+            <div class="course-icon seo">🔍</div>
+            <div class="course-info">
+                <div class="course-title">SEO Fundamentals</div) <div class="course-desc">Rank higher on Google and drive organic traffic</div>
+                <div class="course-stats">
+                    <span>🎥 8 lessons</span>
+                    <span>⏱️ 2 hours</span>
+                </div>
+            </div>
+        </div>
+        <div class="course-progress">
+            <div class="course-progress-header">
+                <span>Progress</span>
+                <span>0/8 lessons</span>
+            </div>
+            <div class="course-progress-bar">
+                <div class="course-progress-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+        <button class="start-btn" onclick="alert('Starting course...')">Start Course</button>
+    </div>
+
+    <div class="course-card">
+        <div class="course-header">
+            <div class="course-icon social">📱</div>
+            <div class="course-info">
+                <div class="course-title">Social Media Strategy</div>
+                <div class="course-desc">Build a powerful social media presence</div>
+                <div class="course-stats">
+                    <span>🎥 10 lessons</span>
+                    <span>⏱️ 2.5 hours</span>
+                </div>
+            </div>
+        </div>
+        <div class="course-progress">
+            <div class="course-progress-header">
+                <span>Progress</span>
+                <span>3/10 lessons</span>
+            </div>
+            <div class="course-progress-bar">
+                <div class="course-progress-fill" style="width: 30%;"></div>
+            </div>
+        </div>
+        <button class="start-btn" onclick="alert('Continuing course...')">Continue Course</button>
+    </div>
+
+    <div class="course-card">
+        <div class="course-header">
+            <div class="course-icon content">✍️</div>
+            <div class="course-info">
+                <div class="course-title">Content Writing Pro</div>
+                <div class="course-desc">Write content that converts readers to customers</div>
+                <div class="course-stats">
+                    <span>🎥 15 lessons</span>
+                    <span>⏱️ 4 hours</span>
+                </div>
+            </div>
+        </div>
+        <div class="course-progress">
+            <div class="course-progress-header">
+                <span>Progress</span>
+                <span>0/15 lessons</span>
+            </div>
+            <div class="course-progress-bar">
+                <div class="course-progress-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+        <button class="start-btn" onclick="alert('Starting course...')">Start Course</button>
+    </div>
+
+    <!-- Recent Videos -->
+    <h2 class="section-title" style="margin-top: 25px;">🎥 Quick Tutorials</h2>
+    <div class="video-grid">
+        <div class="video-card">
+            <div class="video-thumbnail" style="background: linear-gradient(135deg, #10b981, #059669);">
+                <div class="play-btn">▶</div>
+                <span class="video-duration">5:20</span>
+            </div>
+            <div class="video-info">
+                <div class="video-title">5 SEO Tips for Beginners</div>
+                <div class="video-meta">
+                    <span>🔍 SEO</span>
+                    <span>👁️ 5.1k views</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                <div class="play-btn">▶</div>
+                <span class="video-duration">8:45</span>
+            </div>
+            <div class="video-info">
+                <div class="video-title">Instagram Growth Hacks 2025</div>
+                <div class="video-meta">
+                    <span>📱 Social</span>
+                    <span>👁️ 8.2k views</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                <div class="play-btn">▶</div>
+                <span class="video-duration">10:15</span>
+            </div>
+            <div class="video-info">
+                <div class="video-title">How to Write Headlines That Sell</div>
+                <div class="video-meta">
+                    <span>✍️ Content</span>
+                    <span>👁️ 3.7k views</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail" style="background: linear-gradient(135deg, #ec4899, #be185d);">
+                <div class="play-btn">▶</div>
+                <span class="video-duration">7:30</span>
+            </div>
+            <div class="video-info">
+                <div class="video-title">Email Marketing That Works</div>
+                <div class="video-meta">
+                    <span>📈 Marketing</span>
+                    <span>👁️ 4.5k views</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Category filter
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Play button click
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('🎥 Video player would open here!\n\nIn a real app, this would play the tutorial video.');
+            });
+        });
+    </script>
+</body>
+</html>
