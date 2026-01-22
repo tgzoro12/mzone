@@ -3,707 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MZone - Premium Membership</title>
-    <meta name="theme-color" content="#6366f1">
-    
-    <!-- Prevent Caching -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
-    <!-- Paystack -->
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    
+    <title>Choose Your Plan - MZone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
-        
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-        
-        .logo { font-size: 3rem; margin-bottom: 10px; }
-        h1 { color: #1a1a2e; margin-bottom: 10px; font-size: 2rem; }
-        
-        .price {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #6366f1;
-            margin: 20px 0;
-        }
-        .price span { font-size: 1rem; color: #666; }
-        
-        .features {
-            text-align: left;
-            margin: 20px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-        .features li {
-            padding: 8px 0;
-            list-style: none;
-            color: #333;
-        }
-        .features li::before { content: "✅ "; }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            border: none;
-            padding: 16px 40px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .btn-primary:hover { opacity: 0.9; }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-        
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid #6366f1;
-            color: #6366f1;
-            padding: 14px 40px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 12px;
-        }
-        .btn-secondary:hover { background: #6366f1; color: white; }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 20px 0;
-            color: #999;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #ddd;
-        }
-        .divider span { padding: 0 15px; }
-        
-        /* Modal */
-        .modal {
-            display: none;
+        .gradient-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at top, #1a1a3e 0%, #000 50%);
+            z-index: -1;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            padding: 20px;
+            padding: 20px 0;
+            margin-bottom: 40px;
         }
-        .modal.active { display: flex; }
-        
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 400px;
-            width: 100%;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-content h2 { margin-bottom: 20px; color: #1a1a2e; text-align: center; }
-        
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
+        .logo {
             font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #333;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .form-group input {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-        
-        .modal-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            border: none;
-            padding: 16px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .modal-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .modal-btn.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        
-        .switch-text {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #666;
-            text-align: center;
-        }
-        .switch-text a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .secure-text {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #666;
-            text-align: center;
-        }
-        
-        .msg-box {
-            padding: 12px;
+        .user-name { color: #94a3b8; }
+        .logout-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 8px;
-            margin-bottom: 15px;
+            color: #fff;
+            cursor: pointer;
             font-size: 0.9rem;
-            display: none;
         }
-        .msg-box.show { display: block; }
-        .msg-box.error { background: #fee2e2; color: #dc2626; }
-        .msg-box.success { background: #d1fae5; color: #059669; }
-        .msg-box.warning { background: #fef3c7; color: #d97706; }
-        
-        /* Telegram Warning */
-        .telegram-warning {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            z-index: 9999;
-            padding: 20px;
-            flex-direction: column;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 32px;
+            font-size: 1.1rem;
+        }
+        .billing-toggle {
+            display: flex;
             justify-content: center;
             align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
         }
-        .telegram-warning.show { display: flex; }
-        
-        .warning-box {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            max-width: 380px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .warning-icon { font-size: 60px; margin-bottom: 20px; }
-        .warning-box h2 { color: #1a1a2e; margin-bottom: 15px; }
-        .warning-box > p { color: #666; margin-bottom: 25px; line-height: 1.6; }
-        
-        .open-browser-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 50px;
+        .billing-option {
+            color: #64748b;
+            font-weight: 500;
             cursor: pointer;
-            width: 100%;
-            margin-bottom: 15px;
-            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .billing-option.active {
+            color: #fff;
+        }
+        .toggle-switch {
+            width: 60px;
+            height: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-switch.yearly {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        }
+        .toggle-knob {
+            width: 26px;
+            height: 26px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.yearly .toggle-knob {
+            transform: translateX(30px);
+        }
+        .save-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .plan-card {
+            background: rgba(255,255,255,0.03);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .plan-card:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-4px);
+        }
+        .plan-card.popular {
+            background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,182,212,0.15));
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .plan-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .plan-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+        .plan-price {
+            margin-bottom: 24px;
+        }
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        .price-period {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        .price-yearly {
+            display: none;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        .yearly-active .price-yearly {
             display: block;
         }
-        
-        .copy-btn {
-            background: transparent;
-            border: 2px solid #6366f1;
-            color: #6366f1;
-            padding: 14px 32px;
+        .plan-features {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+        .plan-features li {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e2e8f0;
+            list-style: none;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        .check { color: #10b981; font-weight: bold; }
+        .check.pro { color: #8b5cf6; }
+        .plan-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
-            border-radius: 50px;
             cursor: pointer;
-            width: 100%;
+            transition: all 0.3s;
+            border: none;
         }
-        
-        .steps {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: left;
+        .plan-btn.standard {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .steps h4 { color: #1a1a2e; font-size: 0.9rem; margin-bottom: 12px; }
-        .steps ol { padding-left: 20px; color: #666; font-size: 0.85rem; line-height: 1.8; }
+        .plan-btn.standard:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        .plan-btn.pro {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            color: #fff;
+        }
+        .plan-btn.pro:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+        }
+        .plan-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .secure-text {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error.show { display: block; }
+        @media (max-width: 640px) {
+            h1 { font-size: 2rem; }
+            .price-amount { font-size: 2.5rem; }
+            .plan-card { padding: 24px; }
+        }
     </style>
 </head>
 <body>
-    <!-- Telegram Warning -->
-    <div class="telegram-warning" id="telegramWarning">
-        <div class="warning-box">
-            <div class="warning-icon">🔒</div>
-            <h2>Open in Browser</h2>
-            <p>For secure payment, please open this page in Chrome or Safari.</p>
-            <a href="https://tgzoro12.github.io/mzone/?v=3001" target="_blank" class="open-browser-btn">Open in Browser 🌐</a>
-            <button class="copy-btn" onclick="copyLink()">📋 Copy Link</button>
-            <div class="steps">
-                <h4>📱 Or follow these steps:</h4>
-                <ol>
-                    <li>Tap <strong>⋮</strong> (menu) at top right</li>
-                    <li>Select <strong>"Open in Chrome"</strong></li>
-                    <li>Complete your payment</li>
-                </ol>
+    <div class="gradient-bg"></div>
+    
+    <nav class="navbar">
+        <div class="logo">🎬 MZone</div>
+        <div class="user-info">
+            <span class="user-name" id="userName">Loading...</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Choose Your Plan</h1>
+        <p class="subtitle">Get unlimited access to all premium content</p>
+        
+        <div class="billing-toggle">
+            <span class="billing-option active" id="monthlyLabel">Monthly</span>
+            <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+                <div class="toggle-knob"></div>
             </div>
+            <span class="billing-option" id="yearlyLabel">Yearly</span>
+            <span class="save-badge">Save up to 17%</span>
         </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="container" id="mainContent">
-        <div class="logo">🎬</div>
-        <h1>MZone Premium</h1>
-        <p style="color: #666;">Unlimited access to all content</p>
         
-        <div class="price">₦16,000 <span>/month</span></div>
+        <div class="error" id="error"></div>
         
-        <ul class="features">
-            <li>Unlimited Downloads</li>
-            <li>Premium Content Access</li>
-            <li>24/7 Support</li>
-            <li>No Ads</li>
-            <li>Early Access to New Content</li>
-        </ul>
-        
-        <button class="btn-primary" onclick="openSignupModal()">Subscribe Now 🚀</button>
-        
-        <div class="divider"><span>or</span></div>
-        
-        <button class="btn-secondary" onclick="openLoginModal()">Login to Dashboard</button>
-    </div>
-    
-    <!-- Signup Modal -->
-    <div class="modal" id="signupModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeAllModals()">&times;</span>
-            <h2>📝 Create Account</h2>
-            
-            <div class="msg-box" id="signupMsg"></div>
-            
-            <form id="signupForm" onsubmit="return handleSignup(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="signupName" placeholder="Enter your full name" required>
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div class="plan-icon">⚡</div>
+                <h2 class="plan-name">Standard</h2>
+                <p class="plan-desc">Perfect for getting started</p>
+                <div class="plan-price">
+                    <span class="price-amount" id="standardPrice">₦16,000</span>
+                    <span class="price-period" id="standardPeriod">/month</span>
+                    <p class="price-yearly" id="standardYearly">Billed annually</p>
                 </div>
-                
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Create Password</label>
-                    <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-                </div>
-                
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input type="password" id="signupConfirm" placeholder="Confirm password" required>
-                </div>
-                
-                <button type="submit" class="modal-btn" id="signupBtn">Create Account</button>
-            </form>
-            
-            <p class="switch-text">Already have an account? <a onclick="switchToLogin()">Login here</a></p>
-        </div>
-    </div>
-    
-    <!-- Login Modal -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeAllModals()">&times;</span>
-            <h2>🔐 Login</h2>
-            
-            <div class="msg-box" id="loginMsg"></div>
-            
-            <form id="loginForm" onsubmit="return handleLogin(event)">
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                </div>
-                
-                <button type="submit" class="modal-btn" id="loginBtn">Login</button>
-            </form>
-            
-            <p class="switch-text">Don't have an account? <a onclick="switchToSignup()">Subscribe now</a></p>
-        </div>
-    </div>
-    
-    <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeAllModals()">&times;</span>
-            <h2>💳 Complete Payment</h2>
-            
-            <div class="msg-box" id="paymentMsg"></div>
-            
-            <p style="text-align: center; color: #666; margin-bottom: 20px;">
-                Account created for <strong id="paymentEmail"></strong>
-            </p>
-            
-            <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-                <p style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="color: #666;">Plan</span>
-                    <strong>Premium Monthly</strong>
-                </p>
-                <p style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span style="color: #666;">Duration</span>
-                    <strong>30 Days</strong>
-                </p>
-                <p style="display: flex; justify-content: space-between; font-size: 1.2rem;">
-                    <span style="color: #666;">Total</span>
-                    <strong style="color: #6366f1;">₦16,000</strong>
-                </p>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> Unlimited Downloads</li>
+                    <li><span class="check">✓</span> All Premium Content</li>
+                    <li><span class="check">✓</span> Email Support</li>
+                    <li><span class="check">✓</span> No Ads</li>
+                    <li><span class="check">✓</span> Cancel Anytime</li>
+                </ul>
+                <button class="plan-btn standard" id="standardBtn" onclick="subscribe('standard')">Get Standard</button>
             </div>
             
-            <button class="modal-btn green" id="payNowBtn" onclick="processPayment()">Pay ₦16,000 Now</button>
-            
-            <p class="secure-text">🔒 Secured by Paystack</p>
+            <div class="plan-card popular">
+                <span class="popular-badge">⭐ Most Popular</span>
+                <div class="plan-icon">👑</div>
+                <h2 class="plan-name">Pro</h2>
+                <p class="plan-desc">Best value for power users</p>
+                <div class="plan-price">
+                    <span class="price-amount" id="proPrice">₦22,000</span>
+                    <span class="price-period" id="proPeriod">/month</span>
+                    <p class="price-yearly" id="proYearly">Billed annually</p>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check pro">✓</span> Everything in Standard</li>
+                    <li><span class="check pro">✓</span> Priority Support 24/7</li>
+                    <li><span class="check pro">✓</span> Early Access Features</li>
+                    <li><span class="check pro">✓</span> Exclusive Pro Content</li>
+                    <li><span class="check pro">✓</span> Pro Tools & Resources</li>
+                </ul>
+                <button class="plan-btn pro" id="proBtn" onclick="subscribe('pro')">Get Pro →</button>
+            </div>
         </div>
+        
+        <p class="secure-text">🔒 Secured by Paystack • Cancel anytime</p>
     </div>
 
     <script>
-        // ===== CONFIGURATION =====
-        var CONFIG = {
-            VERSION: '3001',
-            SITE_URL: 'https://tgzoro12.github.io/mzone/',
-            PAYSTACK_KEY: 'pk_live_18794be9809d543f92489b74092f937800df5aa8',
-            SUBSCRIPTION_DAYS: 30,
-            AMOUNT: 1600000
+        const API_URL = 'https://paystack-backend-9g7t.onrender.com';
+        let isYearly = false;
+        const prices = {
+            standard: { monthly: 16000, yearly: 145000 },
+            pro: { monthly: 22000, yearly: 220000 }
         };
+        const token = localStorage.getItem('mzone_token');
+        const user = JSON.parse(localStorage.getItem('mzone_user') || '{}');
+        if (!token) { window.location.href = 'login.html'; }
+        if (user.isSubscribed) { window.location.href = 'dashboard.html'; }
+        document.getElementById('userName').textContent = user.fullName || user.email || 'User';
         
-        // ===== ADMIN CREDENTIALS (CHANGE THESE!) =====
-        var ADMIN_EMAIL = 'admin@mzone.com';
-        var ADMIN_PASSWORD = 'MZone@2025Admin';
+        function formatPrice(amount) { return '₦' + amount.toLocaleString(); }
         
-        // ===== STORAGE KEY =====
-        var STORAGE_KEY = 'mzone_data_v3';
-        
-        // ===== GET/SAVE DATA =====
-        function getData() {
-            try {
-                var data = localStorage.getItem(STORAGE_KEY);
-                return data ? JSON.parse(data) : { users: {}, currentUser: null };
-            } catch (e) {
-                return { users: {}, currentUser: null };
-            }
-        }
-        
-        function saveData(data) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        }
-        
-        // ===== WEBVIEW DETECTION =====
-        function isInAppBrowser() {
-            var ua = navigator.userAgent || '';
-            if (/Telegram|Instagram|FBAN|FBAV|Twitter|Snapchat|TikTok|wv|WebView/i.test(ua)) return true;
-            if (/Android/.test(ua) && /Version\/[\d.]+/.test(ua) && !/Chrome/.test(ua)) return true;
-            return false;
-        }
-        
-        // ===== INIT =====
-        window.onload = function() {
-            if (isInAppBrowser()) {
-                document.getElementById('telegramWarning').classList.add('show');
-                document.getElementById('mainContent').style.display = 'none';
-                return;
-            }
-            
-            // Check if already logged in with valid subscription
-            var data = getData();
-            if (data.currentUser) {
-                if (data.currentUser === 'admin' || data.isAdmin) {
-                    window.location.href = 'dashboard.html';
-                    return;
-                }
-                var user = data.users[data.currentUser];
-                if (user && user.subscribed && user.expiry > Date.now()) {
-                    window.location.href = 'dashboard.html';
-                }
-            }
-        };
-        
-        // ===== COPY LINK =====
-        function copyLink() {
-            var url = CONFIG.SITE_URL + '?v=' + CONFIG.VERSION;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(function() {
-                    alert('✅ Link copied! Paste in Chrome or Safari.');
-                });
+        function toggleBilling() {
+            isYearly = !isYearly;
+            const toggle = document.getElementById('billingToggle');
+            const monthlyLabel = document.getElementById('monthlyLabel');
+            const yearlyLabel = document.getElementById('yearlyLabel');
+            const container = document.querySelector('.container');
+            if (isYearly) {
+                toggle.classList.add('yearly');
+                monthlyLabel.classList.remove('active');
+                yearlyLabel.classList.add('active');
+                container.classList.add('yearly-active');
+                document.getElementById('standardPrice').textContent = formatPrice(prices.standard.yearly);
+                document.getElementById('standardPeriod').textContent = '/year';
+                document.getElementById('proPrice').textContent = formatPrice(prices.pro.yearly);
+                document.getElementById('proPeriod').textContent = '/year';
             } else {
-                prompt('Copy this link:', url);
+                toggle.classList.remove('yearly');
+                monthlyLabel.classList.add('active');
+                yearlyLabel.classList.remove('active');
+                container.classList.remove('yearly-active');
+                document.getElementById('standardPrice').textContent = formatPrice(prices.standard.monthly);
+                document.getElementById('standardPeriod').textContent = '/month';
+                document.getElementById('proPrice').textContent = formatPrice(prices.pro.monthly);
+                document.getElementById('proPeriod').textContent = '/month';
             }
         }
         
-        // ===== MODALS =====
-        function openSignupModal() {
-            if (isInAppBrowser()) {
-                alert('Please open in Chrome or Safari first.');
-                return;
-            }
-            closeAllModals();
-            document.getElementById('signupModal').classList.add('active');
+        function logout() {
+            localStorage.removeItem('mzone_token');
+            localStorage.removeItem('mzone_user');
+            window.location.href = 'login.html';
         }
         
-        function openLoginModal() {
-            closeAllModals();
-            document.getElementById('loginModal').classList.add('active');
-        }
-        
-        function openPaymentModal(email) {
-            closeAllModals();
-            document.getElementById('paymentEmail').textContent = email;
-            sessionStorage.setItem('pendingPaymentEmail', email);
-            document.getElementById('paymentModal').classList.add('active');
-        }
-        
-        function closeAllModals() {
-            document.querySelectorAll('.modal').forEach(function(m) {
-                m.classList.remove('active');
-            });
-            document.querySelectorAll('.msg-box').forEach(function(m) {
-                m.classList.remove('show');
-            });
-        }
-        
-        function switchToLogin() {
-            closeAllModals();
-            openLoginModal();
-        }
-        
-        function switchToSignup() {
-            closeAllModals();
-            openSignupModal();
-        }
-        
-        // Close modal on outside click
-        document.querySelectorAll('.modal').forEach(function(modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) closeAllModals();
-            });
-        });
-        
-        // ===== SHOW MESSAGE =====
-        function showMsg(id, msg, type) {
-            var el = document.getElementById(id);
-            el.textContent = msg;
-            el.className = 'msg-box show ' + type;
-        }
-        
-        // ===== SIGNUP =====
-        function handleSignup(e) {
-            e.preventDefault();
-            
-            var name = document.getElementById('signupName').value.trim();
-            var email = document.getElementById('signupEmail').value.trim().toLowerCase();
-            var password = document.getElementById('signupPassword').value;
-            var confirm = document.getElementById('signupConfirm').value;
-            
-            if (!name || !email || !password) {
-                showMsg('signupMsg', 'Please fill all fields', 'error');
-                return false;
-            }
-            
-            if (password.length < 6) {
-                showMsg('signupMsg', 'Password must be at least 6 characters', 'error');
-                return false;
-            }
-            
-            if (password !== confirm) {
-                showMsg('signupMsg', 'Passwords do not match', 'error');
-                return false;
-            }
-            
-            var data = getData();
-            
-            if (data.users[email]) {
-                showMsg('signupMsg', 'Email already registered. Please login.', 'error');
-                return false;
-            }
-            
-            // Create user (not subscribed yet)
-            data.users[email] = {
-                name: name,
-                email: email,
-                password: password,
-                subscribed: false,
-                expiry: null,
-                createdAt: Date.now()
-            };
-            
-            saveData(data);
-            
-            showMsg('signupMsg', '✅ Account created! Proceeding to payment...', 'success');
-            
-            setTimeout(function() {
-                openPaymentModal(email);
-            }, 1500);
-            
-            return false;
-        }
-        
-        // ===== LOGIN =====
-        function handleLogin(e) {
-            e.preventDefault();
-            
-            var email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            var password = document.getElementById('loginPassword').value;
-            
-            // Check admin login
-            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-                var data = getData();
-                data.currentUser = 'admin';
-                data.isAdmin = true;
-                saveData(data);
-                
-                showMsg('loginMsg', '✅ Admin login successful!', 'success');
-                setTimeout(function() {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-                return false;
-            }
-            
-            var data = getData();
-            var user = data.users[email];
-            
-            if (!user) {
-                showMsg('loginMsg', 'Email not found. Please sign up.', 'error');
-                return false;
-            }
-            
-            if (user.password !== password) {
-                showMsg('loginMsg', 'Incorrect password.', 'error');
-                return false;
-            }
-            
-            // Check subscription
-            if (!user.subscribed || !user.expiry || user.expiry < Date.now()) {
-                showMsg('loginMsg', 'Your subscription is not active.', 'warning');
-                setTimeout(function() {
-                    if (confirm('Subscribe now for ₦16,000?')) {
-                        openPaymentModal(email);
-                    }
-                }, 500);
-                return false;
-            }
-            
-            // Login successful
-            data.currentUser = email;
-            data.isAdmin = false;
-            saveData(data);
-            
-            showMsg('loginMsg', '✅ Login successful!', 'success');
-            setTimeout(function() {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-            
-            return false;
-        }
-        
-        // ===== PAYMENT =====
-        function processPayment() {
-            var email = sessionStorage.getItem('pendingPaymentEmail');
-            
-            if (!email) {
-                showMsg('paymentMsg', 'Session error. Please try again.', 'error');
-                return;
-            }
-            
-            var data = getData();
-            var user = data.users[email];
-            
-            if (!user) {
-                showMsg('paymentMsg', 'User not found.', 'error');
-                return;
-            }
-            
-            document.getElementById('payNowBtn').disabled = true;
-            document.getElementById('payNowBtn').textContent = 'Processing...';
-            
-            var handler = PaystackPop.setup({
-                key: CONFIG.PAYSTACK_KEY,
-                email: email,
-                amount: CONFIG.AMOUNT,
-                currency: 'NGN',
-                ref: 'MZ_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                callback: function(response) {
-                    // Payment successful
-                    var expiry = Date.now() + (CONFIG.SUBSCRIPTION_DAYS * 24 * 60 * 60 * 1000);
-                    
-                    data.users[email].subscribed = true;
-                    data.users[email].expiry = expiry;
-                    data.users[email].paymentRef = response.reference;
-                    data.currentUser = email;
-                    data.isAdmin = false;
-                    
-                    saveData(data);
-                    sessionStorage.removeItem('pendingPaymentEmail');
-                    
-                    showMsg('paymentMsg', '✅ Payment successful!', 'success');
-                    setTimeout(function() {
-                        window.location.href = 'dashboard.html?welcome=true';
-                    }, 1500);
-                },
-                onClose: function() {
-                    document.getElementById('payNowBtn').disabled = false;
-                    document.getElementById('payNowBtn').textContent = 'Pay ₦16,000 Now';
-                    showMsg('paymentMsg', 'Payment cancelled.', 'warning');
+        async function subscribe(planType) {
+            const plan = planType + (isYearly ? '_yearly' : '_monthly');
+            const btn = document.getElementById(planType + 'Btn');
+            const error = document.getElementById('error');
+            error.classList.remove('show');
+            btn.disabled = true;
+            const originalText = btn.textContent;
+            btn.textContent = 'Processing...';
+            try {
+                const res = await fetch(`${API_URL}/payment/initialize`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ plan })
+                });
+                const data = await res.json();
+                if (data.success && data.authorization_url) {
+                    localStorage.setItem('mzone_payment_ref', data.reference);
+                    window.location.href = data.authorization_url;
+                } else {
+                    error.textContent = data.message || 'Payment initialization failed';
+                    error.classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
                 }
-            });
-            
-            handler.openIframe();
+            } catch (err) {
+                error.textContent = 'Connection error. Please try again.';
+                error.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
         }
     </script>
 </body>
