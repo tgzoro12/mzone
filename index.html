@@ -3,405 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choose Your Plan - MZone</title>
+    <title>MZone - Premium Content Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #000;
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .gradient-bg {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at top, #1a1a3e 0%, #000 50%);
-            z-index: -1;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 40px;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .user-name { color: #94a3b8; }
-        .logout-btn {
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-        }
-        .subtitle {
-            color: #94a3b8;
-            margin-bottom: 32px;
-            font-size: 1.1rem;
-        }
-        .billing-toggle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 40px;
-        }
-        .billing-option {
-            color: #64748b;
-            font-weight: 500;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .billing-option.active {
-            color: #fff;
-        }
-        .toggle-switch {
-            width: 60px;
-            height: 30px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .toggle-switch.yearly {
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-        }
-        .toggle-knob {
-            width: 26px;
-            height: 26px;
-            background: #fff;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
-        }
-        .toggle-switch.yearly .toggle-knob {
-            transform: translateX(30px);
-        }
-        .save-badge {
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-        .plan-card {
-            background: rgba(255,255,255,0.03);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 32px;
-            position: relative;
-            transition: all 0.3s;
-        }
-        .plan-card:hover {
-            border-color: rgba(139, 92, 246, 0.3);
-            transform: translateY(-4px);
-        }
-        .plan-card.popular {
-            background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,182,212,0.15));
-            border-color: rgba(139, 92, 246, 0.5);
-        }
-        .popular-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-            padding: 6px 20px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .plan-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
-        }
-        .plan-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .plan-desc {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-        }
-        .plan-price {
-            margin-bottom: 24px;
-        }
-        .price-amount {
-            font-size: 3rem;
-            font-weight: 800;
-        }
-        .price-period {
-            color: #94a3b8;
-            font-size: 1rem;
-        }
-        .price-yearly {
-            display: none;
-            color: #64748b;
-            font-size: 0.85rem;
-            margin-top: 4px;
-        }
-        .yearly-active .price-yearly {
-            display: block;
-        }
-        .plan-features {
-            text-align: left;
-            margin-bottom: 24px;
-        }
-        .plan-features li {
-            padding: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #e2e8f0;
-            list-style: none;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.95rem;
-        }
-        .plan-features li:last-child {
-            border-bottom: none;
-        }
-        .check { color: #10b981; font-weight: bold; }
-        .check.pro { color: #8b5cf6; }
-        .plan-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-        }
-        .plan-btn.standard {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .plan-btn.standard:hover {
-            background: rgba(255,255,255,0.15);
-        }
-        .plan-btn.pro {
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-            color: #fff;
-        }
-        .plan-btn.pro:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
-        }
-        .plan-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .secure-text {
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        .error.show { display: block; }
-        @media (max-width: 640px) {
-            h1 { font-size: 2rem; }
-            .price-amount { font-size: 2.5rem; }
-            .plan-card { padding: 24px; }
-        }
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; min-height: 100vh; }
+        .gradient-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at top, #1a1a3e 0%, #000 50%); z-index: -1; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-btn { padding: 10px 20px; border-radius: 8px; font-weight: 500; text-decoration: none; font-size: 0.9rem; transition: all 0.3s; cursor: pointer; border: none; }
+        .nav-btn.outline { border: 1px solid rgba(255,255,255,0.2); color: #fff; background: transparent; }
+        .nav-btn.primary { background: linear-gradient(135deg, #8b5cf6, #06b6d4); color: #fff; }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 60px; }
+        .badge { background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.3); padding: 8px 16px; border-radius: 50px; font-size: 0.85rem; color: #a78bfa; margin-bottom: 24px; }
+        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 24px; max-width: 900px; }
+        h1 span { background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.2rem; color: #94a3b8; max-width: 600px; margin-bottom: 40px; line-height: 1.6; }
+        .cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #06b6d4); color: #fff; box-shadow: 0 4px 30px rgba(139, 92, 246, 0.4); }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .features { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
+        .features h2 { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .feature-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; transition: all 0.3s; }
+        .feature-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(139, 92, 246, 0.3); transform: translateY(-4px); }
+        .feature-icon { width: 48px; height: 48px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(6,182,212,0.2)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; }
+        .feature-card h3 { font-size: 1.2rem; margin-bottom: 12px; }
+        .feature-card p { color: #94a3b8; line-height: 1.6; }
+        footer { text-align: center; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.1); color: #64748b; }
     </style>
 </head>
 <body>
     <div class="gradient-bg"></div>
-    
     <nav class="navbar">
         <div class="logo">🎬 MZone</div>
-        <div class="user-info">
-            <span class="user-name" id="userName">Loading...</span>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+        <div class="nav-links">
+            <a href="login.html" class="nav-btn outline">Login</a>
+            <a href="register.html" class="nav-btn primary">Get Started</a>
         </div>
     </nav>
-    
-    <div class="container">
-        <h1>Choose Your Plan</h1>
-        <p class="subtitle">Get unlimited access to all premium content</p>
-        
-        <div class="billing-toggle">
-            <span class="billing-option active" id="monthlyLabel">Monthly</span>
-            <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
-                <div class="toggle-knob"></div>
-            </div>
-            <span class="billing-option" id="yearlyLabel">Yearly</span>
-            <span class="save-badge">Save up to 17%</span>
+    <section class="hero">
+        <div class="badge">✨ Premium Content Platform</div>
+        <h1>Access <span>Unlimited</span> Premium Content</h1>
+        <p>Join thousands of members enjoying exclusive downloads, tutorials, tools, and resources. One subscription, unlimited possibilities.</p>
+        <div class="cta-buttons">
+            <a href="register.html" class="btn btn-primary">Start Free Trial →</a>
+            <a href="login.html" class="btn btn-secondary">Login</a>
         </div>
-        
-        <div class="error" id="error"></div>
-        
-        <div class="plans-grid">
-            <div class="plan-card">
-                <div class="plan-icon">⚡</div>
-                <h2 class="plan-name">Standard</h2>
-                <p class="plan-desc">Perfect for getting started</p>
-                <div class="plan-price">
-                    <span class="price-amount" id="standardPrice">₦16,000</span>
-                    <span class="price-period" id="standardPeriod">/month</span>
-                    <p class="price-yearly" id="standardYearly">Billed annually</p>
-                </div>
-                <ul class="plan-features">
-                    <li><span class="check">✓</span> Unlimited Downloads</li>
-                    <li><span class="check">✓</span> All Premium Content</li>
-                    <li><span class="check">✓</span> Email Support</li>
-                    <li><span class="check">✓</span> No Ads</li>
-                    <li><span class="check">✓</span> Cancel Anytime</li>
-                </ul>
-                <button class="plan-btn standard" id="standardBtn" onclick="subscribe('standard')">Get Standard</button>
-            </div>
-            
-            <div class="plan-card popular">
-                <span class="popular-badge">⭐ Most Popular</span>
-                <div class="plan-icon">👑</div>
-                <h2 class="plan-name">Pro</h2>
-                <p class="plan-desc">Best value for power users</p>
-                <div class="plan-price">
-                    <span class="price-amount" id="proPrice">₦22,000</span>
-                    <span class="price-period" id="proPeriod">/month</span>
-                    <p class="price-yearly" id="proYearly">Billed annually</p>
-                </div>
-                <ul class="plan-features">
-                    <li><span class="check pro">✓</span> Everything in Standard</li>
-                    <li><span class="check pro">✓</span> Priority Support 24/7</li>
-                    <li><span class="check pro">✓</span> Early Access Features</li>
-                    <li><span class="check pro">✓</span> Exclusive Pro Content</li>
-                    <li><span class="check pro">✓</span> Pro Tools & Resources</li>
-                </ul>
-                <button class="plan-btn pro" id="proBtn" onclick="subscribe('pro')">Get Pro →</button>
-            </div>
+    </section>
+    <section class="features">
+        <h2>Everything You Need</h2>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon">📥</div><h3>Unlimited Downloads</h3><p>Access our entire library of premium content with no download limits.</p></div>
+            <div class="feature-card"><div class="feature-icon">🎓</div><h3>Pro Tutorials</h3><p>Learn from industry experts with step-by-step video tutorials.</p></div>
+            <div class="feature-card"><div class="feature-icon">🛠️</div><h3>Premium Tools</h3><p>Get access to exclusive tools and software to boost your productivity.</p></div>
+            <div class="feature-card"><div class="feature-icon">⚡</div><h3>Early Access</h3><p>Be the first to access new content before anyone else.</p></div>
+            <div class="feature-card"><div class="feature-icon">🎯</div><h3>No Ads</h3><p>Enjoy a clean, ad-free experience across all content.</p></div>
+            <div class="feature-card"><div class="feature-icon">💬</div><h3>Priority Support</h3><p>Get help when you need it with our 24/7 priority support.</p></div>
         </div>
-        
-        <p class="secure-text">🔒 Secured by Paystack • Cancel anytime</p>
-    </div>
-
-    <script>
-        const API_URL = 'https://paystack-backend-9g7t.onrender.com';
-        let isYearly = false;
-        const prices = {
-            standard: { monthly: 16000, yearly: 145000 },
-            pro: { monthly: 22000, yearly: 220000 }
-        };
-        const token = localStorage.getItem('mzone_token');
-        const user = JSON.parse(localStorage.getItem('mzone_user') || '{}');
-        if (!token) { window.location.href = 'login.html'; }
-        if (user.isSubscribed) { window.location.href = 'dashboard.html'; }
-        document.getElementById('userName').textContent = user.fullName || user.email || 'User';
-        
-        function formatPrice(amount) { return '₦' + amount.toLocaleString(); }
-        
-        function toggleBilling() {
-            isYearly = !isYearly;
-            const toggle = document.getElementById('billingToggle');
-            const monthlyLabel = document.getElementById('monthlyLabel');
-            const yearlyLabel = document.getElementById('yearlyLabel');
-            const container = document.querySelector('.container');
-            if (isYearly) {
-                toggle.classList.add('yearly');
-                monthlyLabel.classList.remove('active');
-                yearlyLabel.classList.add('active');
-                container.classList.add('yearly-active');
-                document.getElementById('standardPrice').textContent = formatPrice(prices.standard.yearly);
-                document.getElementById('standardPeriod').textContent = '/year';
-                document.getElementById('proPrice').textContent = formatPrice(prices.pro.yearly);
-                document.getElementById('proPeriod').textContent = '/year';
-            } else {
-                toggle.classList.remove('yearly');
-                monthlyLabel.classList.add('active');
-                yearlyLabel.classList.remove('active');
-                container.classList.remove('yearly-active');
-                document.getElementById('standardPrice').textContent = formatPrice(prices.standard.monthly);
-                document.getElementById('standardPeriod').textContent = '/month';
-                document.getElementById('proPrice').textContent = formatPrice(prices.pro.monthly);
-                document.getElementById('proPeriod').textContent = '/month';
-            }
-        }
-        
-        function logout() {
-            localStorage.removeItem('mzone_token');
-            localStorage.removeItem('mzone_user');
-            window.location.href = 'login.html';
-        }
-        
-        async function subscribe(planType) {
-            const plan = planType + (isYearly ? '_yearly' : '_monthly');
-            const btn = document.getElementById(planType + 'Btn');
-            const error = document.getElementById('error');
-            error.classList.remove('show');
-            btn.disabled = true;
-            const originalText = btn.textContent;
-            btn.textContent = 'Processing...';
-            try {
-                const res = await fetch(`${API_URL}/payment/initialize`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ plan })
-                });
-                const data = await res.json();
-                if (data.success && data.authorization_url) {
-                    localStorage.setItem('mzone_payment_ref', data.reference);
-                    window.location.href = data.authorization_url;
-                } else {
-                    error.textContent = data.message || 'Payment initialization failed';
-                    error.classList.add('show');
-                    btn.disabled = false;
-                    btn.textContent = originalText;
-                }
-            } catch (err) {
-                error.textContent = 'Connection error. Please try again.';
-                error.classList.add('show');
-                btn.disabled = false;
-                btn.textContent = originalText;
-            }
-        }
-    </script>
+    </section>
+    <footer><p>© 2024 MZone. All rights reserved.</p></footer>
 </body>
 </html>
