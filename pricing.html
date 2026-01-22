@@ -3,157 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscribe - MZone</title>
+    <title>Choose Your Plan - MZone</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #000;
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .gradient-bg {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(ellipse at top, #1a1a3e 0%, #000 50%);
-            z-index: -1;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            margin-bottom: 40px;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .user-name {
-            color: #94a3b8;
-        }
-        .logout-btn {
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-        }
-        .subtitle {
-            color: #94a3b8;
-            margin-bottom: 48px;
-            font-size: 1.1rem;
-        }
-        .price-card {
-            background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,182,212,0.15));
-            border: 2px solid rgba(139, 92, 246, 0.4);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 24px;
-        }
-        .popular-badge {
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 16px;
-        }
-        .plan-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .price {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin: 16px 0;
-        }
-        .price span {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            font-weight: 400;
-        }
-        .features {
-            text-align: left;
-            margin: 32px 0;
-        }
-        .features li {
-            padding: 12px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #e2e8f0;
-            list-style: none;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .check {
-            color: #10b981;
-            font-weight: bold;
-        }
-        .btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .secure-text {
-            margin-top: 16px;
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-        }
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; min-height: 100vh; padding: 20px; }
+        .gradient-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at top, #1a1a3e 0%, #000 50%); z-index: -1; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 40px; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-name { color: #94a3b8; }
+        .logout-btn { padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; cursor: pointer; font-size: 0.9rem; }
+        .container { max-width: 900px; margin: 0 auto; text-align: center; }
+        h1 { font-size: 2.5rem; margin-bottom: 16px; }
+        .subtitle { color: #94a3b8; margin-bottom: 32px; font-size: 1.1rem; }
+        .billing-toggle { display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 40px; }
+        .billing-option { color: #64748b; font-weight: 500; cursor: pointer; transition: color 0.3s; }
+        .billing-option.active { color: #fff; }
+        .toggle-switch { width: 60px; height: 30px; background: rgba(255,255,255,0.1); border-radius: 15px; position: relative; cursor: pointer; transition: background 0.3s; }
+        .toggle-switch.yearly { background: linear-gradient(135deg, #8b5cf6, #06b6d4); }
+        .toggle-knob { width: 26px; height: 26px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s; }
+        .toggle-switch.yearly .toggle-knob { transform: translateX(30px); }
+        .save-badge { background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .plan-card { background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 32px; position: relative; transition: all 0.3s; }
+        .plan-card:hover { border-color: rgba(139, 92, 246, 0.3); transform: translateY(-4px); }
+        .plan-card.popular { background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,182,212,0.15)); border-color: rgba(139, 92, 246, 0.5); }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #8b5cf6, #06b6d4); padding: 6px 20px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .plan-icon { font-size: 3rem; margin-bottom: 16px; text-align: center; }
+        .plan-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; text-align: center; }
+        .plan-desc { color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px; text-align: center; }
+        .plan-price { margin-bottom: 24px; text-align: center; }
+        .price-amount { font-size: 3rem; font-weight: 800; }
+        .price-period { color: #94a3b8; font-size: 1rem; }
+        .plan-features { margin-bottom: 24px; }
+        .plan-features li { padding: 10px 0; display: flex; align-items: center; gap: 12px; color: #e2e8f0; list-style: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
+        .plan-features li:last-child { border-bottom: none; }
+        .check { color: #10b981; font-weight: bold; }
+        .check.pro { color: #8b5cf6; }
+        .plan-btn { width: 100%; padding: 16px; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; border: none; }
+        .plan-btn.standard { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        .plan-btn.pro { background: linear-gradient(135deg, #8b5cf6, #06b6d4); color: #fff; }
+        .plan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .secure-text { color: #64748b; font-size: 0.9rem; }
+        .error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px; border-radius: 10px; margin-bottom: 20px; display: none; }
         .error.show { display: block; }
+        @media (max-width: 640px) { h1 { font-size: 2rem; } .price-amount { font-size: 2.5rem; } }
     </style>
 </head>
 <body>
     <div class="gradient-bg"></div>
-    
     <nav class="navbar">
         <div class="logo">🎬 MZone</div>
         <div class="user-info">
@@ -161,50 +60,84 @@
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </nav>
-    
     <div class="container">
         <h1>Choose Your Plan</h1>
         <p class="subtitle">Get unlimited access to all premium content</p>
-        
-        <div class="error" id="error"></div>
-        
-        <div class="price-card">
-            <span class="popular-badge">⭐ MOST POPULAR</span>
-            <h2 class="plan-name">Premium Access</h2>
-            <div class="price">₦16,000<span>/month</span></div>
-            
-            <ul class="features">
-                <li><span class="check">✓</span> Unlimited Downloads</li>
-                <li><span class="check">✓</span> All Premium Content</li>
-                <li><span class="check">✓</span> Pro Tools & Resources</li>
-                <li><span class="check">✓</span> Priority Support</li>
-                <li><span class="check">✓</span> No Ads</li>
-                <li><span class="check">✓</span> Cancel Anytime</li>
-            </ul>
-            
-            <button class="btn" id="subscribeBtn" onclick="subscribe()">Subscribe Now →</button>
-            
-            <p class="secure-text">🔒 Secured by Paystack</p>
+        <div class="billing-toggle">
+            <span class="billing-option active" id="monthlyLabel">Monthly</span>
+            <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
+                <div class="toggle-knob"></div>
+            </div>
+            <span class="billing-option" id="yearlyLabel">Yearly</span>
+            <span class="save-badge">Save up to 17%</span>
         </div>
+        <div class="error" id="error"></div>
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div class="plan-icon">⚡</div>
+                <h2 class="plan-name">Standard</h2>
+                <p class="plan-desc">Perfect for getting started</p>
+                <div class="plan-price">
+                    <span class="price-amount" id="standardPrice">₦16,000</span>
+                    <span class="price-period" id="standardPeriod">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check">✓</span> Unlimited Downloads</li>
+                    <li><span class="check">✓</span> All Premium Content</li>
+                    <li><span class="check">✓</span> Email Support</li>
+                    <li><span class="check">✓</span> No Ads</li>
+                    <li><span class="check">✓</span> Cancel Anytime</li>
+                </ul>
+                <button class="plan-btn standard" id="standardBtn" onclick="subscribe('standard')">Get Standard</button>
+            </div>
+            <div class="plan-card popular">
+                <span class="popular-badge">⭐ Most Popular</span>
+                <div class="plan-icon">👑</div>
+                <h2 class="plan-name">Pro</h2>
+                <p class="plan-desc">Best value for power users</p>
+                <div class="plan-price">
+                    <span class="price-amount" id="proPrice">₦22,000</span>
+                    <span class="price-period" id="proPeriod">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check pro">✓</span> Everything in Standard</li>
+                    <li><span class="check pro">✓</span> Priority Support 24/7</li>
+                    <li><span class="check pro">✓</span> Early Access Features</li>
+                    <li><span class="check pro">✓</span> Exclusive Pro Content</li>
+                    <li><span class="check pro">✓</span> Pro Tools & Resources</li>
+                </ul>
+                <button class="plan-btn pro" id="proBtn" onclick="subscribe('pro')">Get Pro →</button>
+            </div>
+        </div>
+        <p class="secure-text">🔒 Secured by Paystack • Cancel anytime</p>
     </div>
-
     <script>
         const API_URL = 'https://paystack-backend-9g7t.onrender.com';
+        let isYearly = false;
+        const prices = { standard: { monthly: 16000, yearly: 145000 }, pro: { monthly: 22000, yearly: 220000 } };
         
-        // Check auth
         const token = localStorage.getItem('mzone_token');
         const user = JSON.parse(localStorage.getItem('mzone_user') || '{}');
         
-        if (!token) {
-            window.location.href = 'login.html';
-        }
-        
-        // Check if already subscribed
-        if (user.isSubscribed) {
-            window.location.href = 'dashboard.html';
-        }
+        if (!token) { window.location.href = 'register.html'; }
+        if (user.isSubscribed) { window.location.href = 'dashboard.html'; }
         
         document.getElementById('userName').textContent = user.fullName || user.email || 'User';
+        
+        function formatPrice(amount) { return '₦' + amount.toLocaleString(); }
+        
+        function toggleBilling() {
+            isYearly = !isYearly;
+            const toggle = document.getElementById('billingToggle');
+            document.getElementById('monthlyLabel').classList.toggle('active', !isYearly);
+            document.getElementById('yearlyLabel').classList.toggle('active', isYearly);
+            toggle.classList.toggle('yearly', isYearly);
+            
+            document.getElementById('standardPrice').textContent = formatPrice(isYearly ? prices.standard.yearly : prices.standard.monthly);
+            document.getElementById('standardPeriod').textContent = isYearly ? '/year' : '/month';
+            document.getElementById('proPrice').textContent = formatPrice(isYearly ? prices.pro.yearly : prices.pro.monthly);
+            document.getElementById('proPeriod').textContent = isYearly ? '/year' : '/month';
+        }
         
         function logout() {
             localStorage.removeItem('mzone_token');
@@ -212,24 +145,22 @@
             window.location.href = 'login.html';
         }
         
-        async function subscribe() {
-            const btn = document.getElementById('subscribeBtn');
+        async function subscribe(planType) {
+            const plan = planType + (isYearly ? '_yearly' : '_monthly');
+            const btn = document.getElementById(planType + 'Btn');
             const error = document.getElementById('error');
             
             error.classList.remove('show');
             btn.disabled = true;
+            const originalText = btn.textContent;
             btn.textContent = 'Processing...';
             
             try {
                 const res = await fetch(`${API_URL}/payment/initialize`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ plan: 'monthly' })
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ plan })
                 });
-                
                 const data = await res.json();
                 
                 if (data.success && data.authorization_url) {
@@ -239,13 +170,13 @@
                     error.textContent = data.message || 'Payment initialization failed';
                     error.classList.add('show');
                     btn.disabled = false;
-                    btn.textContent = 'Subscribe Now →';
+                    btn.textContent = originalText;
                 }
             } catch (err) {
                 error.textContent = 'Connection error. Please try again.';
                 error.classList.add('show');
                 btn.disabled = false;
-                btn.textContent = 'Subscribe Now →';
+                btn.textContent = originalText;
             }
         }
     </script>
