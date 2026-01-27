@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choose Your Plan - MZone</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,6 +20,20 @@
         .container { max-width: 900px; margin: 0 auto; text-align: center; }
         h1 { font-size: 2.5rem; margin-bottom: 16px; }
         .subtitle { color: #94a3b8; margin-bottom: 32px; font-size: 1.1rem; }
+        
+        .discount-section { max-width: 500px; margin: 0 auto 32px; }
+        .discount-container { display: flex; gap: 12px; align-items: center; }
+        .discount-input { flex: 1; padding: 14px 18px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 1rem; transition: all 0.3s; }
+        .discount-input:focus { outline: none; border-color: rgba(139, 92, 246, 0.5); background: rgba(255,255,255,0.08); }
+        .discount-input::placeholder { color: #64748b; }
+        .apply-btn { padding: 14px 28px; background: linear-gradient(135deg, #8b5cf6, #06b6d4); border: none; border-radius: 12px; color: #fff; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 1rem; }
+        .apply-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3); }
+        .apply-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .discount-message { margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 0.9rem; display: none; }
+        .discount-message.success { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; display: block; }
+        .discount-message.error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; display: block; }
+        
         .billing-toggle { display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 40px; }
         .billing-option { color: #64748b; font-weight: 500; cursor: pointer; transition: color 0.3s; }
         .billing-option.active { color: #fff; }
@@ -37,8 +51,13 @@
         .plan-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; text-align: center; }
         .plan-desc { color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px; text-align: center; }
         .plan-price { margin-bottom: 24px; text-align: center; }
-        .price-amount { font-size: 3rem; font-weight: 800; }
+        .original-price { font-size: 1.2rem; color: #64748b; text-decoration: line-through; margin-bottom: 4px; display: none; }
+        .original-price.show { display: block; }
+        .price-amount { font-size: 3rem; font-weight: 800; transition: all 0.3s; }
+        .price-amount.discounted { color: #10b981; }
         .price-period { color: #94a3b8; font-size: 1rem; }
+        .savings-badge { display: inline-block; background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; margin-top: 8px; display: none; }
+        .savings-badge.show { display: inline-block; }
         .plan-features { margin-bottom: 24px; }
         .plan-features li { padding: 10px 0; display: flex; align-items: center; gap: 12px; color: #e2e8f0; list-style: none; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
         .plan-features li:last-child { border-bottom: none; }
@@ -51,7 +70,7 @@
         .secure-text { color: #64748b; font-size: 0.9rem; }
         .error { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px; border-radius: 10px; margin-bottom: 20px; display: none; }
         .error.show { display: block; }
-        @media (max-width: 640px) { h1 { font-size: 2rem; } .price-amount { font-size: 2.5rem; } }
+        @media (max-width: 640px) { h1 { font-size: 2rem; } .price-amount { font-size: 2.5rem; } .discount-container { flex-direction: column; } .apply-btn { width: 100%; } }
     </style>
 </head>
 <body>
@@ -66,6 +85,19 @@
     <div class="container">
         <h1>Choose Your Plan</h1>
         <p class="subtitle">Get unlimited access to all premium content</p>
+        
+        <div class="discount-section">
+            <div class="discount-container">
+                <input type="text" 
+                       id="discountCode" 
+                       class="discount-input" 
+                       placeholder="Enter discount code (e.g., MZONE50)" 
+                       onkeypress="if(event.key==='Enter') applyDiscount()">
+                <button class="apply-btn" onclick="applyDiscount()">Apply</button>
+            </div>
+            <div class="discount-message" id="discountMessage"></div>
+        </div>
+        
         <div class="billing-toggle">
             <span class="billing-option active" id="monthlyLabel">Monthly</span>
             <div class="toggle-switch" id="billingToggle" onclick="toggleBilling()">
@@ -81,8 +113,10 @@
                 <h2 class="plan-name">Standard</h2>
                 <p class="plan-desc">Perfect for getting started</p>
                 <div class="plan-price">
+                    <div class="original-price" id="standardOriginal"></div>
                     <span class="price-amount" id="standardPrice">₦16,000</span>
                     <span class="price-period" id="standardPeriod">/month</span>
+                    <div class="savings-badge" id="standardSavings"></div>
                 </div>
                 <ul class="plan-features">
                     <li><span class="check">✓</span> Unlimited Downloads</li>
@@ -99,8 +133,10 @@
                 <h2 class="plan-name">Pro</h2>
                 <p class="plan-desc">Best value for power users</p>
                 <div class="plan-price">
+                    <div class="original-price" id="proOriginal"></div>
                     <span class="price-amount" id="proPrice">₦22,000</span>
                     <span class="price-period" id="proPeriod">/month</span>
+                    <div class="savings-badge" id="proSavings"></div>
                 </div>
                 <ul class="plan-features">
                     <li><span class="check pro">✓</span> Everything in Standard</li>
@@ -117,7 +153,24 @@
     <script>
         const API_URL = 'https://paystack-backend-9g7t.onrender.com';
         let isYearly = false;
-        const prices = { standard: { monthly: 16000, yearly: 145000 }, pro: { monthly: 22000, yearly: 220000 } };
+        let appliedDiscount = null;
+        
+        const originalPrices = { 
+            standard: { monthly: 16000, yearly: 145000 }, 
+            pro: { monthly: 22000, yearly: 220000 } 
+        };
+        
+        const discountedPrices = {
+            standard: { monthly: 7000, yearly: 70000 },
+            pro: { monthly: 11000, yearly: 110000 }
+        };
+        
+        const discountCodes = {
+            'MZONE50': { name: 'MZONE50', percentage: 56, standard: 7000, pro: 11000 },
+            'WELCOME50': { name: 'WELCOME50', percentage: 56, standard: 7000, pro: 11000 },
+            'LAUNCH2025': { name: 'LAUNCH2025', percentage: 56, standard: 7000, pro: 11000 },
+            'VIP2025': { name: 'VIP2025', percentage: 56, standard: 7000, pro: 11000 }
+        };
         
         const token = localStorage.getItem('mzone_token');
         const user = JSON.parse(localStorage.getItem('mzone_user') || '{}');
@@ -129,6 +182,70 @@
         
         function formatPrice(amount) { return '₦' + amount.toLocaleString(); }
         
+        function applyDiscount() {
+            const code = document.getElementById('discountCode').value.trim().toUpperCase();
+            const message = document.getElementById('discountMessage');
+            
+            if (!code) {
+                message.className = 'discount-message error';
+                message.textContent = '⚠️ Please enter a discount code';
+                return;
+            }
+            
+            if (discountCodes[code]) {
+                appliedDiscount = discountCodes[code];
+                message.className = 'discount-message success';
+                message.textContent = `🎉 Success! ${appliedDiscount.percentage}% discount applied to all plans!`;
+                
+                updatePrices();
+                
+                document.getElementById('standardOriginal').classList.add('show');
+                document.getElementById('proOriginal').classList.add('show');
+                document.getElementById('standardSavings').classList.add('show');
+                document.getElementById('proSavings').classList.add('show');
+                
+                localStorage.setItem('mzone_discount', code);
+            } else {
+                appliedDiscount = null;
+                message.className = 'discount-message error';
+                message.textContent = '❌ Invalid discount code. Try: MZONE50, WELCOME50, LAUNCH2025';
+                
+                updatePrices();
+                
+                document.getElementById('standardOriginal').classList.remove('show');
+                document.getElementById('proOriginal').classList.remove('show');
+                document.getElementById('standardSavings').classList.remove('show');
+                document.getElementById('proSavings').classList.remove('show');
+                
+                localStorage.removeItem('mzone_discount');
+            }
+        }
+        
+        function updatePrices() {
+            const prices = appliedDiscount ? discountedPrices : originalPrices;
+            const period = isYearly ? 'yearly' : 'monthly';
+            
+            const standardPrice = prices.standard[period];
+            document.getElementById('standardPrice').textContent = formatPrice(standardPrice);
+            document.getElementById('standardPrice').classList.toggle('discounted', !!appliedDiscount);
+            
+            if (appliedDiscount) {
+                document.getElementById('standardOriginal').textContent = formatPrice(originalPrices.standard[period]);
+                const savings = originalPrices.standard[period] - standardPrice;
+                document.getElementById('standardSavings').textContent = `Save ${formatPrice(savings)}`;
+            }
+            
+            const proPrice = prices.pro[period];
+            document.getElementById('proPrice').textContent = formatPrice(proPrice);
+            document.getElementById('proPrice').classList.toggle('discounted', !!appliedDiscount);
+            
+            if (appliedDiscount) {
+                document.getElementById('proOriginal').textContent = formatPrice(originalPrices.pro[period]);
+                const savings = originalPrices.pro[period] - proPrice;
+                document.getElementById('proSavings').textContent = `Save ${formatPrice(savings)}`;
+            }
+        }
+        
         function toggleBilling() {
             isYearly = !isYearly;
             const toggle = document.getElementById('billingToggle');
@@ -136,20 +253,26 @@
             document.getElementById('yearlyLabel').classList.toggle('active', isYearly);
             toggle.classList.toggle('yearly', isYearly);
             
-            document.getElementById('standardPrice').textContent = formatPrice(isYearly ? prices.standard.yearly : prices.standard.monthly);
             document.getElementById('standardPeriod').textContent = isYearly ? '/year' : '/month';
-            document.getElementById('proPrice').textContent = formatPrice(isYearly ? prices.pro.yearly : prices.pro.monthly);
             document.getElementById('proPeriod').textContent = isYearly ? '/year' : '/month';
+            
+            updatePrices();
         }
         
         function logout() {
             localStorage.removeItem('mzone_token');
             localStorage.removeItem('mzone_user');
+            localStorage.removeItem('mzone_discount');
             window.location.href = 'login.html';
         }
         
         async function subscribe(planType) {
-            const plan = planType + (isYearly ? '_yearly' : '_monthly');
+            let plan = planType + (isYearly ? '_yearly' : '_monthly');
+            
+            if (appliedDiscount) {
+                plan = plan + '_discounted';
+            }
+            
             const btn = document.getElementById(planType + 'Btn');
             const error = document.getElementById('error');
             
@@ -159,10 +282,16 @@
             btn.textContent = 'Processing...';
             
             try {
+                const requestBody = { plan };
+                
+                if (appliedDiscount) {
+                    requestBody.discountCode = appliedDiscount.name;
+                }
+                
                 const res = await fetch(`${API_URL}/payment/initialize`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ plan })
+                    body: JSON.stringify(requestBody)
                 });
                 const data = await res.json();
                 
@@ -182,6 +311,14 @@
                 btn.textContent = originalText;
             }
         }
+        
+        window.addEventListener('load', () => {
+            const savedDiscount = localStorage.getItem('mzone_discount');
+            if (savedDiscount && discountCodes[savedDiscount]) {
+                document.getElementById('discountCode').value = savedDiscount;
+                applyDiscount();
+            }
+        });
     </script>
 </body>
 </html>
